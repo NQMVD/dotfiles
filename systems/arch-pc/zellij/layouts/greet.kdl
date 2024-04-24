@@ -1,0 +1,18 @@
+layout {
+    pane split_direction="vertical" {
+        pane
+        pane split_direction="horizontal" {
+            pane size="30%" split_direction="vertical" {
+                pane size="20%" command="cal"
+                pane {
+                    command "head"
+                    args "/home/noah/TODO.md"
+                }
+            }
+            pane {
+                command "zsh"
+                args "-c" "cbonsai -l -t 0.001 -m welcome back! -M 3 -L 32"
+            }
+        }
+    }
+}
