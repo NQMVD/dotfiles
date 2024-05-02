@@ -15,53 +15,40 @@ compinit
 # make less more friendly for non-text input files, see lesspipe(1)
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
 
-# set variable identifying the chroot you work in (used in the prompt below)
-if [ -z "$debian_chroot" ] && [ -r /etc/debian_chroot ]; then
-    debian_chroot=$(cat /etc/debian_chroot)
-fi
+# --- exports ---
+export VISUAL=helix
+export EDITOR=helix
+export PATHBACK="${PATH}"
+export PATH="${PATH}:/home/noah/programs"
+export PATH="${PATH}:/home/noah/.cargo/bin"
+export PATH="${PATH}:/home/noah/.local/bin"
+export PATH="${PATH}:$(go env GOPATH)/bin"
 
-# --- Variables ---
-export VISUAL=hx
-export EDITOR=hx
-export PATHBACK="$PATH"
-export PATH="$PATH:/home/noah/programs"
+# --- variables ---
+export JRNL_ENTRY_COUNT=8
 
-export FZF_DEFAULT_COMMAND="fd --hidden --strip-cwd-prefix --exclude .git"
-export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
-export FZF_ALT_C_COMMAND="fd --type=d --hidden --strip-cwd-prefix --exclude .git"
-export FZF_CTRL_T_OPTS="--preview 'bat -n --color=always --line-range :500 {}'"
-export FZF_ALT_C_OPTS="--preview 'eza --tree --color=always {} | head -200'"
+# source ~/.zsh_aliases
+source ~/.zsh_gh_completion
+source ~/.config/broot/launcher/bash/br # TODO: move to /local/bin
+source ~/.secrets
 
-# --- evals ---
-eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 eval "$(starship init zsh)"
 eval "$(zoxide init zsh)"
-eval $(thefuck --alias)
 # eval "$(zellij setup --generate-completion zsh)"
-eval "$(fzf --zsh)"
-_fzf_compgen_path() {
-  fd --hidden --exclude .git . "$1"
-}
-_fzf_compgen_dir() {
-  fd --type=d --hidden --exclude .git . "$1"
-}
-_fzf_comprun() {
-  local command=$1
-  shift
+# if [[ -z "$ZELLIJ" ]]; then
+#     if [[ "$ZELLIJ_AUTO_ATTACH" == "true" ]]; then
+#         zellij attach -c
+#     else
+#         zellij
+#     fi
 
-  case "$command" in
-    cd)           fzf --preview 'eza --tree --color=always {} | head -200' "$@" ;;
-    export|unset) fzf --preview "eval 'echo $'{}"         "$@" ;;
-    ssh)          fzf --preview 'dig {}'                   "$@" ;;
-    *)            fzf --preview "bat -n --color=always --line-range :500 {}" "$@" ;;
-  esac
-}
+#     if [[ "$ZELLIJ_AUTO_EXIT" == "true" ]]; then
+#         exit
+#     fi
+# fi
 
-source /home/noah/.config/broot/launcher/bash/br
-source "$HOME/.cargo/env"
-source ~/.zsh_gh_completion
 
-# --- Aliases ---
+# --- aliases ---
 # Change Dir
 alias c='z'
 alias cc='z -'
@@ -84,112 +71,307 @@ alias ltta='eza --all --tree --level=3 --color=always --group-directories-first'
 alias lttta='eza --all --tree --level=4 --color=always --group-directories-first'
 
 # file commands
-alias cp='rsync -ah --progress' #'cp -vR'
+alias cp='cp -vR'
 alias rm='rm -vr'
 alias mv='mv -v'
+# file commands with gum spinners
+# alias cp='gum spin --spinner=minidot --show-output --title="Copying..." -- cp -vR'
+# alias mv='gum spin --spinner=minidot --show-output --title="Moving..." -- mv -v'
+# alias rm='gum spin --spinner=minidot --show-output --title="Deleting" -- rm -vr'
 
 # sys info
-alias cls='clear && neofetch'
-alias da='du -sch'
+alias neo='neofetch'
+alias da='du -ch -d 1'
 alias df='df -h'
 alias free='free -mt'
 alias ip='command ip -color=auto'
 alias userlist='cut -d: -f1 /etc/passwd'
 alias probe='sudo -E hw-probe -all -upload'
 
-# apt
-alias in='sudo apt install'
-alias up='sudo apt update && sudo apt upgrade'
+# pacman (and yay)
+alias in='yay -S --noconfirm'
+alias up='yay -Syu' # dont add noconfirm here!
 
-# programs
-alias bat='batcat'
-alias lg=lazygit
+# program shorts
+alias lg='lazygit'
 alias vim='nvim'
+alias hx='helix'
+alias glop='glow -p'
 alias cht='cht.sh'
 alias wget='wget -c'
 alias ai='gh copilot suggest'
-alias sun='sunbeam'
+alias tod='taskell ~/taskell.md'
+alias todo='taskell'
+alias con='wezterm ssh noah@mondkuchen.tech'
+alias jrnle='jrnl --edit'
+alias jrnlg="jrnl -n ${JRNL_ENTRY_COUNT} | glow"
+alias jrnlp="jrnl -n ${JRNL_ENTRY_COUNT} --format pretty"
+alias jrnlb="jrnl -n ${JRNL_ENTRY_COUNT} --format boxes" # maybe with | gum pager ?
+alias jrnls="jrnl -n ${JRNL_ENTRY_COUNT} --format short"
+alias jrnll='jrnl --list'
+alias jrnli='gum input --cursor.foreground "#f58ee0" \
+          --prompt.foreground "#c58fff" \
+          --width 100 \
+          --prompt "jrnl entry: " \
+          --placeholder "..." | jrnl'
 
-# other
+# util
+alias cls='clear; cbonsai -p -M 6 -L 40'
+alias hxo='FILE=$(gum file -a || exit 1) && helix $FILE'
+alias bon='cbonsai -l -t 0.001 -m "welcome back!" -M 6 -L 40'
+alias hi='zellij k welcome; zellij -s welcome --layout=greet'
+alias napsync='WD=$(pwd); cd ~/repos/snippets && git add . && git commit -m "update" && git push; cd $WD'
+# alias acp='git add . && git commit -m "$(gum input --header=\"Changes:\")" && gum confirm "Push?" && git push'
+alias acp='git add . && (git status --porcelain | grep -E "^\s?[AM]+\s" >/dev/null && git commit -m "$(gum input --header=\"Changes:\")") && gum confirm "Push?" && git push'
+alias download='cd ~/Downloads && gum spin --spinner=minidot --show-output --title="Downloading..." -- wget -c'
+
+# misc
+alias splitfile='split'
 alias term2iso='echo '\''Setting terminal to iso mode'\'' ; print -n '\''\e%@'\'
 alias term2utf='echo '\''Setting terminal to utf-8 mode'\''; print -n '\''\e%G'\'
 alias zsrc='source ~/.zshrc'
 
-#########################################################################################
+# functions
+function matrix() { echo -e "\e[1;40m" ; clear ; while :; do echo $LINES $COLUMNS $(( $RANDOM % $COLUMNS)) $(( $RANDOM % 72 )) ;sleep 0.05; done|awk '{ letters="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()"; c=$4;        letter=substr(letters,c,1);a[$3]=0;for (x in a) {o=a[x];a[x]=a[x]+1; printf "\033[%s;%sH\033[2;32m%s",o,x,letter; printf "\033[%s;%sH\033[1;37m%s\033[0;0H",a[x],x,letter;if (a[x] >= $1) { a[x]=0; } }}' }
 
-# --- functions ---
+function rep() {
+  for dir in */; do
+    if [ -d "$dir/.git" ]; then
 
-matrix() { echo -e "\e[1;40m" ; clear ; while :; do echo $LINES $COLUMNS $(( $RANDOM % $COLUMNS)) $(( $RANDOM % 72 )) ;sleep 0.05; done|awk '{ letters="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()"; c=$4;        letter=substr(letters,c,1);a[$3]=0;for (x in a) {o=a[x];a[x]=a[x]+1; printf "\033[%s;%sH\033[2;32m%s",o,x,letter; printf "\033[%s;%sH\033[1;37m%s\033[0;0H",a[x],x,letter;if (a[x] >= $1) { a[x]=0; } }}' }
+      (cd "$dir" || exit
+      local content=$(starship explain)
+      local cwd=$(echo "$content" | rg 'working dir' | sed 's/.*"\(.*\)".*/\1/')
+      local branch=$(echo "$content" | rg 'branch' | sed 's/.*"\(.*\)".*/\1/')
+      local state=$(echo "$content" | rg 'state' | sed 's/.*"\(.*\)".*/\1/')
+      local versions=$(echo "$content" | rg 'via' | while read -r line; do echo "$line" | sed 's/.*"\(.*\)".*/\1/'; done | tr '\n' ' ')
 
-
-pcp() {
-	strace -q -ewrite cp -- "${1}" "${2}" 2>&1 | awk '{
-		count += $NF
-	    if (count % 10 == 0) {
-	       percent = count / total_size * 100
-	       printf "%3d%% [", percent
-	       for (i=0;i<=percent;i++)
-	          printf "="
-	       printf ">"
-	       for (i=percent;i<100;i++)
-	          printf " "
-	       printf "]\r"
-	    }
-	 }
-	 END { print "" }' total_size=$(stat -c '%s' "${1}") count=0
+      echo "- ${cwd}${branch}${state}${versions}")
+      # (cd "$dir" || exit; starship prompt | sed -E 's/%\{[^}]*%}//g' | sed 's/..$//')
+      echo ""
+    fi
+  done
 }
 
-pmv() {
-	strace -q -ewrite mv -- "${1}" "${2}" 2>&1 | awk '{
-		count += $NF
-	    if (count % 10 == 0) {
-	       percent = count / total_size * 100
-	       printf "%3d%% [", percent
-	       for (i=0;i<=percent;i++)
-	          printf "="
-	       printf ">"
-	       for (i=percent;i<100;i++)
-	          printf " "
-	       printf "]\r"
-	    }
-	 }
-	 END { print "" }' total_size=$(stat -c '%s' "${1}") count=0
+function conf() {
+  local choice=$(gum choose "zsh" "zellij" "starship" "jrnl" "hyprland")
+
+  case "$choice" in
+    zsh) helix ~/.zshrc; source ~/.zshrc && echo 'Reloaded!' || echo 'Failed to Reload...' ;;
+    zellij) helix ~/.config/zellij/config.kdl ;;
+    starship) helix ~/.config/starship.toml ;;
+    jrnl) helix ~/.config/jrnl/jrnl.yaml ;;
+    hyprland) helix ~/.config/hypr/hyprland.conf ;;
+  esac
 }
 
-prm() {
-	strace -q -ewrite rm -- "${1}" "${2}" 2>&1 | awk '{
-		count += $NF
-	    if (count % 10 == 0) {
-	       percent = count / total_size * 100
-	       printf "%3d%% [", percent
-	       for (i=0;i<=percent;i++)
-	          printf "="
-	       printf ">"
-	       for (i=percent;i<100;i++)
-	          printf " "
-	       printf "]\r"
-	    }
-	 }
-	 END { print "" }' total_size=$(stat -c '%s' "${1}") count=0
+function rci() {
+  PKG=$1
+  export PUEUE_CARGO_DONE=-1
+  pueue add -g 'CARGO' "cargo install $PKG && export PUEUE_CARGO_DONE=0 || cargo install $PKG --locked && export PUEUE_CARGO_DONE=0 || export PUEUE_CARGO_DONE=1"
 }
 
-lexc() {
-    local file_path="$1"
-
-    # Check if the file exists
-    if [ ! -f "$file_path" ]; then
-        echo "File not found: $file_path"
+function unpack() {
+    if [[ $# -ne 1 ]]; then
+        echo "Usage: unpack <file>"
         return 1
     fi
 
-    # Prepend shebang
-    local temp_file=$(mktemp)
-    echo '#!/bin/luajit' > "$temp_file"
-    cat "$file_path" >> "$temp_file"
-    mv "$temp_file" "$file_path"
+    local file="$1"
 
-    # Make the file executable
-    chmod +x "$file_path"
-
-    echo "File $file_path is now executable with Luajit."
+    if [[ -f "$file" ]]; then
+        if [[ "$file" == *.zip ]]; then
+            unzip "$file"
+        elif [[ "$file" == *.tar.gz || "$file" == *.tgz ]]; then
+            tar -xzf "$file"
+        elif [[ "$file" == *.tar.bz2 || "$file" == *.tbz2 ]]; then
+            tar -xjf "$file"
+        elif [[ "$file" == *.tar.xz || "$file" == *.txz ]]; then
+            tar -xJf "$file"
+        elif [[ "$file" == *.tar ]]; then
+            tar -xf "$file"
+        else
+            echo "Unsupported file format."
+            return 1
+        fi
+    else
+        echo "File not found: $file"
+        return 1
+    fi
 }
+
+
+# Function to create an executable copy of a file in /bin directory
+function create_executable_copyOLD() {
+    local source_file="$1"
+    local base_name="$(basename "$source_file")"
+    local dest_file="/usr/local/bin/$base_name"
+
+    # Check if the source file exists
+    if [ ! -f "$source_file" ]; then
+        echo "Error: Source file '$source_file' not found."
+        return 1
+    fi
+
+    # Check if the destination file already exists
+    if [ -e "$dest_file" ]; then
+        echo "Error: Destination file '$dest_file' already exists."
+        return 1
+    fi
+
+    # Copy the file to /bin directory
+    sudo cp -v "$source_file" "$dest_file"
+    
+    # Make the file executable
+    sudo chmod +x "$dest_file"
+
+    echo "Executable copy created: $dest_file"
+}
+
+# Function to create an executable copy of a file in /bin directory
+function cec() {
+    local source_file="$1"
+    local base_name="$(basename "$source_file")"
+    local dest_file="/usr/local/bin/$base_name"
+
+    # Check if the source file exists
+    if [ ! -f "$source_file" ]; then
+        echo "Error: Source file '$source_file' not found."
+        return 1
+    fi
+
+    # Check if the destination file already exists
+    if [ -e "$dest_file" ]; then
+        # Prompt for confirmation to override the destination file
+        echo "Destination file '$dest_file' already exists."
+        gum confirm "Override it?" || { echo "Aborted..." && return 1 }
+    fi
+
+    # Check if the file contains a shebang line
+    # if ! head -n 1 "$source_file" | grep -q "^#!"; then
+    if ! head -n 1 "$source_file" | grep -q "^#!" && [[ "$source_file" == *.sh ]]; then
+        # Add default shebang line for Zsh
+        sudo echo "#!/usr/bin/env zsh" > "$dest_file"
+        sudo echo "# Automatically added by create_executable_copy function" >> "$dest_file"
+        sudo echo "# ------------------------------------------------------" >> "$dest_file"
+        sudo cat "$source_file" >> "$dest_file"
+    else
+        # Copy the file to /bin directory with sudo
+        sudo cp -v "$source_file" "$dest_file"
+    fi
+    
+    # Make the file executable with sudo
+    sudo chmod +x "$dest_file"
+
+    echo "Executable copy created: $dest_file"
+}
+
+function onetime() {
+  local prog="$1"
+  local cache_file="$HOME/.cache/onetimer"
+
+  # Check if the cache file exists, and create it if it doesn't
+  if [ ! -f "$cache_file" ]; then
+    touch "$cache_file"
+  fi
+
+  # Check if the program has been run before
+  if grep -q "^$prog$" "$cache_file"; then
+    echo "Program $prog has been run before."
+  else
+    # Run the program and add it to the cache file
+    "$prog"
+    echo "$prog" >> "$cache_file"
+  fi
+}
+
+
+function check_packages() {
+  local package=$1
+  local package_managers=(cargo yay pacman apt pip brew)
+  local available_package_managers=()
+                                                                                                                              
+  # Check if each package manager is available on your system
+  for pm in $package_managers; do
+    case $pm in
+      apt)  command -v apt &> /dev/null && available_package_managers+=($pm);;
+      pip)  command -v pip    &> /dev/null && available_package_managers+=($pm);;
+      brew) command -v brew    &> /dev/null && available_package_managers+=($pm);;
+    esac
+  done
+                                                                                                                              
+  # Only proceed if at least one package manager is available
+  if [[ ${#available_package_managers[@]} -gt 0 ]]; then
+    for pm in $available_package_managers; do
+      case $pm in
+        apt|apt-get)
+          installed=$(dpkg-query -W -f=${package} | grep -q ${package} && echo "Installed")
+          available=$(apt-cache policy ${package} | grep -q " Installed" && echo "Available")
+         ;;
+        dnf) installed=$(dnf list --installed ${package} | grep -q ${package} && echo "Installed");;
+        pip)  installed=$(pip show ${package} | grep -q "INSTALLED" && echo "Installed");;
+        npm)  installed=$(npm ls ${package} | grep -q ${package} && echo "Installed");;
+        brew) installed=$(brew list --versions ${package} | grep -q ${package} && echo "Installed");;
+      esac
+                                                                                                                              
+      printf "%-20s %s\n" "$pm: $package" "${installed} ${available}"
+    done
+  else
+    echo "No package managers available on your system."
+  fi
+
+}
+
+function split() {
+    local limit=${1:-50}
+    local width=${2:-80}
+    local content=$(</dev/stdin)
+    local line_count=$(echo -n "$content" | wc -l)
+    
+    if [[ $line_count -gt $limit ]]; then
+        echo "$content" | column -c $width
+    else
+        echo "$content"
+    fi
+}
+
+function list() {
+  # gum choose aliases, customs, programs
+  local choice=$(gum choose "customs" "aliases" "binaries")
+
+  local customs_list='# name - description (args)
+   - conf = choose a config file to edit with `helix`
+   - rep = list all repos width starship promt
+   - unpack = unpacks an archive with either unzip or tar *automatically*
+   - rci = install a rust program and hide it with pueue (program_name)
+   - cec = create executable copy in /bin (file_name)
+   - onetime = runs a program only *once* (program_name)'
+
+  local bin_list='WIP'
+
+  
+  case "$choice" in
+    customs) echo $customs_list | glow ;;
+    aliases) alias ;;
+    programs) echo $bin_list | glow ;;
+  esac
+}
+
+function zen() {
+  local files=$(gum style --padding '0 1' --border 'rounded' "$(l)")
+  local bonsai=$(gum style --padding '0 1' --border 'rounded' "$(cbonsai -p)")
+
+  echo "$(gum join --align 'center' "$files" "$bonsai")"
+}
+
+
+# function acp() {
+#   git add . &&  git commit -m "$(gum input --header='Changes:')" && gum confirm "Push?" && git push
+# }
+
+# --- startup ---
+# clear
+# cbonsai -p -l -t 0.001 -M 6 -L 40
+
+
+# Following line was automatically added by arttime installer
+export MANPATH=/home/noah/.local/share/man:$MANPATH
