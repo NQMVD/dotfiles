@@ -1,0 +1,15 @@
+themes {
+ 	sequoia_moonlight {
+ 		fg "#868690"
+ 		bg "#0F1014"
+ 		black "#0F1014"
+ 		red "#f58ee0"
+ 		green "#8eb5f5"
+ 		yellow "#9898a6"
+ 		blue "#c58fff"
+ 		magenta "#c58fff"
+ 		cyan "#8eb5f5"
+ 		white "#fdfdfe"
+ 		orange "#ffbb88"
+ 	}
+}

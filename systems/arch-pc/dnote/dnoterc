@@ -1,0 +1,3 @@
+editor: helix
+apiEndpoint: https://api.getdnote.com
+enableUpgradeCheck: true

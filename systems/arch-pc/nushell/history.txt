@@ -1,0 +1,201 @@
+time
+time cargo install --list
+timeit cargo install --list
+source checker.nu
+cargo install --list
+cargo install --list | lines | any
+cargo install --list | lines | any { |it| $it.starts-with("nu") }
+cargo install --list | lines | any { |it| $it | str starts-wth 'nu' }
+cargo install --list | lines | any {|| ($in | str starts-wth 'nu') }
+cargo install --list | lines | any {|| ($in | str) }
+cargo install --list | lines | any {|| ($in | str starts-with 'nu') }
+source checker.nu
+chk nu
+[asd asd asd] | len
+[asd asd asd] | length 
+source checker.nu
+chk nu
+let res = (pacman -Qi 'rip')
+res
+print $res
+$res
+let res = (pacman -Qi 'rip' o+e>| ignore)
+print $res
+let res = (pacman -Qi 'tmux' o+e>| ignore); $res
+let res = (pacman -Qi 'tmux' o+e>| ignore); print $res
+pacman -Qi 'tmux'
+let res = (pacman -Qi 'tmux'); print $res
+let res = (pacman -Qi 'rip'); print $res
+print $res
+let res = (pacman -Qi 'tmux'); print $res
+print $res
+$res | describe
+let res = (pacman -Qi 'rip')
+$res | describe
+$res | length
+pacman -Qi 'tmux' | length
+pacman -Qi 'rip' | length
+pacman -Qi 'rip' e>| length
+pacman -Qi 'rip' o>| length
+pacman -Qi 'rip' o+e>| length
+pacman -Qi 'tmux' o+e>| length
+pacman -Qi 'zellij' o+e>| length
+pacman -Ss 'zellij' o+e>| length
+pacman -Ss 'zellij'
+pacman -Ss 'tmux'
+pacman -Ss 'tmate'
+pacman -Ss 'tmux'
+pacman -Ss 'nu'
+pacman -Si 'nu'
+pacman -Si 'tmux'
+pacman -Si 'wezterm'
+pacman -Si 'man'
+pacman -Si 'python'
+pacman -Si 'neovide'
+neovide
+^neovide
+source checker.nu
+chk nu
+cargo search nu
+cargo search zellij
+cargo search python3
+cargo search
+cargo search --help
+cargo help search
+;l
+source checker.nu
+chk nu
+source checker.nu
+chk nu
+source checker.nu
+chk nu
+chk nu zellij tmux rg
+source checker.nu
+chk nu zellij tmux rg
+source checker.nu
+chk nu zellij tmux rg
+clear; source checker.nu; chk nu zellij tmux rip python3 luajit
+chk nu zellij tmux rip python3 luajit
+clear; source checker.nu
+chk nu zellij tmux rip python3 luajit
+source checker.nu
+chk nu zellij tmux rip python3 luajit
+source checker.nu
+chk nu zellij tmux rip python3 luajit
+ansi -l
+chk nu zellij tmux rip python3 luajit
+source checker.nu
+chk nu zellij tmux rip python3 luajit
+source checker.nu
+chk nu zellij tmux rip python3 luajit
+source checker.nu
+chk nu zellij tmux rip python3 luajit
+source checker.nu
+chk nu zellij tmux rip python3 luajit
+source checker.nu
+chk nu zellij tmux rip python3 luajit
+ansi -l
+source checker.nu
+chk nu zellij tmux rip python3 luajit
+source checker.nu
+chk nu zellij tmux rip python3 luajit
+source checker.nu
+chk nu zellij tmux rip python3 luajit
+source checker.nu
+chk nu zellij tmux rip python3 luajit
+source checker.nu
+chk nu zellij tmux rip python3 luajit
+"" | append $"test" | append $"more" | str join "\n"
+print ("" | append $"test" | append $"more" | str join "\n")
+[asd asd asd] | print
+source checker.nu
+chk nu zellij tmux rip python3 luajit
+source checker.nu
+chk nu zellij tmux rip python3 luajit
+source checker.nu
+chk nu zellij tmux rip python3 luajit
+source checker.nu
+chk nu zellij tmux rip python3 luajit
+"hello" | append "world!" | str join " " # hello world!
+"hello" | append "world!" | str join " "
+mut res = ""
+$res | append "test"
+$res
+$res = $res | append "test"
+$res = ($res | append "test")
+mut res = []
+$res = ($res | append "test")
+$res
+$res = ($res | append "test")
+$res
+mut res = ""
+$res.append("test")
+$res = $res + "test"
+$res
+$res = $res + "test"
+$res
+$res | describe
+$res = $res | append "test"
+$res | describe
+let n = $res | append "new"
+$n
+source new_checker.nu
+nchk nu
+source new_checker.nu
+nchk nu
+source new_checker.nu
+nchk nu
+nchk nu zellij
+mut res = []
+$res = ($res | append "test")
+$res = ($res | append "test") | print
+$res = ($res | append "test") | print $in
+source new_checker.nu
+nchk nu zellij
+nchk nu zellij luajit
+write
+help write
+help priont
+help print
+source new_checker.nu
+nchk nu zellij luajit
+cargo install luajit
+cargo search luajit
+mut res = []
+$res = ($res | append ("test"))
+$res
+$res
+$res = ($res | append ("test"))
+$res
+mut result = []
+$result
+$result = $result ++ "test"
+$result
+nu -v
+yay -F nu
+exit
+sudo grub-mkconfig -o /boot/grub/grub.cfg
+open /boot/grub/grub.cfg
+sudo open /boot/grub/grub.cfg
+sudo bat /boot/grub/grub.cfg
+sudo os-prober
+sudo os-prober --help
+tldr os-prober
+man
+help
+help os-prober
+source new_checker.nu
+chk ntfs-3g
+nchk ntfs-3g
+mount
+ls | each { cd $in; git log }
+ls | each { cd $in.name; git log }
+exit
+ls | each { cd $in.name; starship prompt }
+exit
+source checker.nu
+chk hostname
+hx checker.nu
+helix checker.nu
+exit
+ls

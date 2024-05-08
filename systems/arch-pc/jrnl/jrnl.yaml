@@ -1,0 +1,21 @@
+colors:
+  body: none
+  date: black
+  tags: yellow
+  title: cyan
+default_hour: 9
+default_minute: 0
+editor: helix
+encrypt: false
+highlight: true
+indent_character: '|'
+journals:
+  default:
+    journal: /home/noah/jrnl/journal.md
+    display_format: markdown
+    # editor: jrnlinput
+linewrap: 79
+tagsymbols: '#@'
+template: false
+timeformat: '%F %r'
+version: v4.1

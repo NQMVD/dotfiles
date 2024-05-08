@@ -1,0 +1,20 @@
+theme = "base16_default"
+
+[editor]
+line-number = "relative"
+cursorline = true
+bufferline = "multiple"
+
+[keys.normal]
+
+[editor.cursor-shape]
+insert = "bar"
+
+[editor.statusline]
+mode.normal = "NORMAL"
+mode.insert = "INSERT"
+mode.select = "SELECT"
+separator = "|"
+left = ["mode", "spinner", "diagnostics"]
+center = ["file-name"]
+right = ["selections", "position", "position-percentage"]
