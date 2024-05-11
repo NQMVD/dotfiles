@@ -45,7 +45,8 @@ alias zsrc='source ~/.zshrc'
 
 # sys info
 alias neo='neofetch' # works but also add others like fetchit
-alias da='du -ch -d 1'
+alias fetch='fetchit -f ~/Pictures/ascii/arch.txt'
+alias da='du -ch -d 1' # replace with dust
 alias df='df -h'
 alias free='free -mt'
 alias ip='command ip -color=auto'
@@ -68,6 +69,8 @@ alias con='wezterm ssh noah@mondkuchen.tech'
 alias pgr='gum pager'
 alias note='dnote'
 
+alias fzfp="fzf --preview 'bat --color=always --style=plain {}'"
+
 # todos and jrnls
 alias tod='taskell ~/taskell.md'
 alias tode='helix ~/taskell.md'
@@ -89,7 +92,7 @@ alias cls='clear; cbonsai -p -M 6 -L 40'
 alias hxo='FILE=$(gum file -a || exit 1) && helix $FILE'
 alias bon='cbonsai -l -t 0.001 -m "welcome back!" -M 6 -L 40'
 alias hi='zellij k welcome; zellij -s welcome --layout=greet'
-alias napsync='WD=$(pwd); cd ~/repos/snippets && git add . && git commit -m "update" && git push; cd $WD'
+alias napsync='(cd ~/repos/snippets && git add . && git commit -m "update" && git push)'
 # alias acp='git add . && git commit -m "$(gum input --header=\"Changes:\")" && gum confirm "Push?" && git push'
 alias acp='git add . && (git status --porcelain | grep -E "^\s?[AM]+\s" >/dev/null && git commit -m "$(gum input --header=\"Changes:\")") && gum confirm "Push?" && git push'
 alias download='cd ~/Downloads && gum spin --spinner=minidot --show-output --title="Downloading..." -- wget -c'
