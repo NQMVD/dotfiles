@@ -1,0 +1,12 @@
+- pure
+- robbyrussel
+- catppuccin_mocha
+- space
+- spaceship
+- star
+- tokyonight_storm
+- velvet
+- 1_shell
+- amro
+- bubblesextra
+- 

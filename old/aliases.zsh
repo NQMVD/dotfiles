@@ -27,8 +27,6 @@ alias lst="eza --tree --level=2 ${EZAFLAGS}"
 alias lstt="eza --tree --level=3 ${EZAFLAGS}"
 alias lsttt="eza --tree --level=4 ${EZAFLAGS}"
 
-alias dir='br -sdp'
-
 # file commands
 alias cp='cp -vR'
 alias rm='rm -vr'

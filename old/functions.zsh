@@ -28,6 +28,23 @@ function acp() {
   git status --porcelain | grep -E "^\s?[AM]+\s" >/dev/null && git commit -m "$(gum input --header=\"Changes:\")" && gum confirm "Push?" && git push
 }
 
+# list all repos in cwd with starship
+function rep() {
+  for dir in */; do
+    if [ -d "$dir/.git" ]; then
+
+      (cd "$dir" || exit
+      local content=$(starship explain)
+      local cwd=$(echo "$content" | rg 'working dir' | sed 's/.*"\(.*\)".*/\1/')
+      local branch=$(echo "$content" | rg 'branch' | sed 's/.*"\(.*\)".*/\1/')
+      local state=$(echo "$content" | rg 'state' | sed 's/.*"\(.*\)".*/\1/')
+      local versions=$(echo "$content" | rg 'via' | while read -r line; do echo "$line" | sed 's/.*"\(.*\)".*/\1/'; done | tr '\n' ' ')
+
+      echo "- ${cwd}${branch}${state}${versions}")
+      # (cd "$dir" || exit; starship prompt | sed -E 's/%\{[^}]*%}//g' | sed 's/..$//')
+    fi
+  done
+}
 
 # open config of choice
 function conf() {
@@ -49,6 +66,32 @@ function rci() {
   pueue add -g 'CARGO' "cargo install $PKG && export PUEUE_CARGO_DONE=0 || cargo install $PKG --locked && export PUEUE_CARGO_DONE=0 || export PUEUE_CARGO_DONE=1"
 }
 
+# unzips with either unzip or tar automatically
+function unpack() {
+    [[ $# -ne 1 ]] && echo "Usage: unpack <file>" && return 1
+
+    local file="$1"
+
+    if [[ -f "$file" ]]; then
+        if [[ "$file" == *.zip ]]; then
+            unzip "$file"
+        elif [[ "$file" == *.tar.gz || "$file" == *.tgz ]]; then
+            tar -xzf "$file"
+        elif [[ "$file" == *.tar.bz2 || "$file" == *.tbz2 ]]; then
+            tar -xjf "$file"
+        elif [[ "$file" == *.tar.xz || "$file" == *.txz ]]; then
+            tar -xJf "$file"
+        elif [[ "$file" == *.tar ]]; then
+            tar -xf "$file"
+        else
+            echo "Unsupported file format."
+            return 1
+        fi
+    else
+        echo "File not found: $file"
+        return 1
+    fi
+}
 
 # Function to create an executable copy of a *.zsh!* file in /usr/local/bin directory
 function cec() {
@@ -116,6 +159,43 @@ function onetime() {
 }
 
 
+# DEPRACTED, use pceo
+function check_packages() {
+  local package=$1
+  local package_managers=(cargo yay pacman apt pip brew)
+  local available_package_managers=()
+                                                                                                                              
+  # Check if each package manager is available on your system
+  for pm in $package_managers; do
+    case $pm in
+      apt)  command -v apt &> /dev/null && available_package_managers+=($pm);;
+      pip)  command -v pip    &> /dev/null && available_package_managers+=($pm);;
+      brew) command -v brew    &> /dev/null && available_package_managers+=($pm);;
+    esac
+  done
+                                                                                                                              
+  # Only proceed if at least one package manager is available
+  if [[ ${#available_package_managers[@]} -gt 0 ]]; then
+    for pm in $available_package_managers; do
+      case $pm in
+        apt|apt-get)
+          installed=$(dpkg-query -W -f=${package} | grep -q ${package} && echo "Installed")
+          available=$(apt-cache policy ${package} | grep -q " Installed" && echo "Available")
+         ;;
+        dnf) installed=$(dnf list --installed ${package} | grep -q ${package} && echo "Installed");;
+        pip)  installed=$(pip show ${package} | grep -q "INSTALLED" && echo "Installed");;
+        npm)  installed=$(npm ls ${package} | grep -q ${package} && echo "Installed");;
+        brew) installed=$(brew list --versions ${package} | grep -q ${package} && echo "Installed");;
+      esac
+                                                                                                                              
+      printf "%-20s %s\n" "$pm: $package" "${installed} ${available}"
+    done
+  else
+    echo "No package managers available on your system."
+  fi
+
+}
+
 # splits pipe input when hitting $1 or 50 lines ($2 or 80 = width)
 function split() {
     local limit=${1:-50}
@@ -169,11 +249,8 @@ function list() {
   # TODO: sort scripts by dir then file, then by file extension, 
   # then add markdown like with functions but read the first line with shebang and second line with description
 
-  # local SCRIPTS=$(gum style --padding="0 1" --border=rounded "$(eza -1 --icons=always --color=always ~/scripts)") 
-  # local BINS=$(gum style --padding="0 1" --border=rounded "$(eza -1 --icons=always --color=always /usr/local/bin)") 
-
-  local SCRIPTS=$(hbox scripts "$(eza -1 --icons=always --color=always ~/scripts)") 
-  local BINS=$(hbox binaries "$(eza -1 --icons=always --color=always /usr/local/bin)") 
+  local SCRIPTS=$(gum style --padding="0 1" --border=rounded "$(eza -1 --icons=always --color=always ~/scripts)") 
+  local BINS=$(gum style --padding="0 1" --border=rounded "$(eza -1 --icons=always --color=always /usr/local/bin)") 
 
   case "$choice" in
     aliases) alias | bat -l zsh;;
@@ -204,6 +281,13 @@ function peach() {
   done
 }
 
+# gum style box with a header
+function hbox() {
+  local HEADER=$1
+  shift
+  local REST=$(gum style --padding="0 1" --border=rounded "$@")
+  echo -e "$HEADER\n$REST"
+}
 
 # ask ollama
 function ask() {
@@ -213,89 +297,4 @@ function ask() {
   ollama run "$MODEL" "$PROMPT" | glow
 }
 
-# --- depracted ---
 
-# unzips with either unzip or tar automatically
-# function unpack() {
-#     [[ $# -ne 1 ]] && echo "Usage: unpack <file>" && return 1
-
-#     local file="$1"
-
-#     if [[ -f "$file" ]]; then
-#         if [[ "$file" == *.zip ]]; then
-#             unzip "$file"
-#         elif [[ "$file" == *.tar.gz || "$file" == *.tgz ]]; then
-#             tar -xzf "$file"
-#         elif [[ "$file" == *.tar.bz2 || "$file" == *.tbz2 ]]; then
-#             tar -xjf "$file"
-#         elif [[ "$file" == *.tar.xz || "$file" == *.txz ]]; then
-#             tar -xJf "$file"
-#         elif [[ "$file" == *.tar ]]; then
-#             tar -xf "$file"
-#         else
-#             echo "Unsupported file format."
-#             return 1
-#         fi
-#     else
-#         echo "File not found: $file"
-#         return 1
-#     fi
-# }
-
-
-# gum style box with a header
-# function hbox() {
-#     local HEADER=$1
-#     shift
-#     local REST=$(gum style --padding="0 1" --border=rounded "$@")
-#     echo -e "$HEADER\n$REST"
-# }
-
-
-# function hbox() {
-#   local header=$1
-#   shift
-#   local content="$@"
-
-#   # Generate the boxed content
-#   local boxed_content=$(gum style --padding="0 1" --border=rounded "[ $header ]" "$@") #$(echo "$content" | box)
-
-#   # Extract the first line (the top border) from the boxed content
-#   local top_border=$(echo "$boxed_content" | head -n 1)
-
-#   # Calculate the necessary padding
-#   local border_length=${#top_border}
-#   local header_length=${#header}
-#   local padding_length=$(( (border_length - header_length) / 2 ))
-
-#   # Construct the new top border with the header
-#   local new_top_border=""
-#   new_top_border+="${top_border:0:$((padding_length - 2))}"
-#   new_top_border+="[ $(gum style --foreground 6 $header) ]"
-#   new_top_border+="${top_border:$((2 + padding_length + header_length))}"
-
-#   # Replace the original top border with the new one
-#   local result=$(echo "$boxed_content" | sed "2s/.*/$new_top_border/" | sed '1d')
-
-#   # Print the result
-#   echo "$result"
-# }
-
-
-# list all repos in cwd with starship
-# function rep() {
-#   for dir in */; do
-#     if [ -d "$dir/.git" ]; then
-
-#       (cd "$dir" || exit
-#       local content=$(starship explain)
-#       local cwd=$(echo "$content" | rg 'working dir' | sed 's/.*"\(.*\)".*/\1/')
-#       local branch=$(echo "$content" | rg 'branch' | sed 's/.*"\(.*\)".*/\1/')
-#       local state=$(echo "$content" | rg 'state' | sed 's/.*"\(.*\)".*/\1/')
-#       local versions=$(echo "$content" | rg 'via' | while read -r line; do echo "$line" | sed 's/.*"\(.*\)".*/\1/'; done | tr '\n' ' ')
-
-#       echo "- ${cwd}${branch}${state}${versions}")
-#       # (cd "$dir" || exit; starship prompt | sed -E 's/%\{[^}]*%}//g' | sed 's/..$//')
-#     fi
-#   done
-# }

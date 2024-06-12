@@ -1,19 +1,7 @@
 # --- evals ---
-
-# Prompt
-# TODO: add toggle switch for this
-
-eval "$(oh-my-posh init zsh --config $HOME/.config/zsh/ohmyposh/myown.toml)"
-# eval "$(starship init zsh)"
-
-
-eval "$(fzf --zsh)"
+eval "$(starship init zsh)"
 eval "$(zoxide init zsh)"
-source "$HOME/.config/broot/launcher/bash/br"
-
-# FIX: warns with "can only be called from completion function"
 # eval "$(zellij setup --generate-completion zsh)"
-
 # if [[ -z "$ZELLIJ" ]]; then
 #     if [[ "$ZELLIJ_AUTO_ATTACH" == "true" ]]; then
 #         zellij attach -c
