@@ -9,6 +9,8 @@ source "$CONFPATH/stuff.zsh"
 # Load completions
 source "$CONFPATH/completion.zsh"
 
+source "$CONFPATH/just.zsh"
+
 # Load variables and paths
 source "$CONFPATH/exports.zsh"
 

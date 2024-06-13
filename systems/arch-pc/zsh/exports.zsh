@@ -13,6 +13,7 @@ export MANPATH="/home/noah/.local/share/man:${MANPATH}"
 export JRNL_ENTRY_COUNT=8
 export BAT_STYLE="changes,header,grid"
 export BAT_THEME="base16" # "ansi"
+export JUST_CHOOSER="gum choose --no-limit --header='Recipies:'"
 
 # --- Gum styling ---
 # choose
@@ -27,7 +28,7 @@ export GUM_CHOOSE_SELECTED_FOREGROUND="4"
 
 # confirm
 export GUM_CONFIRM_PROMPT_FOREGROUND="5"
-export GUM_CONFIRM_SELECTED_BACKGROUND="4"
+export GUM_CONFIRM_SELECTED_BACKGROUND="99"
 
 # input & write
 export GUM_INPUT_PROMPT=" "
@@ -41,3 +42,9 @@ export GUM_WRITE_CURSOR_LINE_FOREGROUND="5"
 
 # file
 export GUM_FILE_CURSOR=" "
+
+# spinner
+export GUM_SPIN_SHOW_OUTPUT="true"
+export GUM_SPIN_SPINNER="pulse"
+export GUM_SPIN_TITLE_FOREGROUND="99"
+export GUM_SPIN_SPINNER_FOREGROUND="4"

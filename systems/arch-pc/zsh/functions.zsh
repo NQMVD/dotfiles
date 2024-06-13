@@ -164,7 +164,7 @@ function extract_functions() {
 # lists shell commands: aliases, functions, binaries
 function list() {
   # gum choose aliases, functions, scripts, binaries
-  local choice=$(gum choose "functions" "scripts" "programs" "binaries" "aliases" "all")
+  local choice=$(gum choose "functions" "programs" "scripts" "binaries" "aliases" "all")
 
   # TODO: sort scripts by dir then file, then by file extension, 
   # then add markdown like with functions but read the first line with shebang and second line with description
@@ -172,8 +172,8 @@ function list() {
   # local SCRIPTS=$(gum style --padding="0 1" --border=rounded "$(eza -1 --icons=always --color=always ~/scripts)") 
   # local BINS=$(gum style --padding="0 1" --border=rounded "$(eza -1 --icons=always --color=always /usr/local/bin)") 
 
-  local SCRIPTS=$(hbox scripts "$(eza -1 --icons=always --color=always ~/scripts)") 
-  local BINS=$(hbox binaries "$(eza -1 --icons=always --color=always /usr/local/bin)") 
+  local SCRIPTS=$(hbox scripts "$(eza -1 --color=always ~/scripts)") 
+  local BINS=$(hbox binaries "$(eza -1 --color=always /usr/local/bin)") 
 
   case "$choice" in
     aliases) alias | bat -l zsh;;
@@ -181,7 +181,7 @@ function list() {
     scripts) echo $SCRIPTS;;
     binaries) echo $BINS;;
     programs) gum join "$SCRIPTS" "$BINS";;
-    all) echo 'WIP';;
+    all) extract_functions ~/.config/zsh/functions.zsh | glow && echo && gum join "$SCRIPTS" "$BINS";;
   esac
 }
 
@@ -204,13 +204,24 @@ function peach() {
   done
 }
 
-
 # ask ollama
 function ask() {
   local MODEL='llama3'
-  [[ "$#" -lt 1 ]] && { gum log -l 'error' 'No prompt provided'; return 1 } 
   local PROMPT="$@"
-  ollama run "$MODEL" "$PROMPT" | glow
+  [[ "$#" -lt 1 ]] && PROMPT=$(chewwrite "Prompt:")  #{ gum log -l 'error' 'No prompt provided'; return 1 } 
+  local RESPONSE=$(gum spin --title="Generating..." -- ollama run "$MODEL" "$PROMPT")
+  echo "# DATE: $(date)
+---
+# MODEL: ${MODEL}
+---
+# PROMPT::
+${PROMPT}
+---
+# RESPONSE::
+${RESPONSE}
+" > "${HOME}/ai/${MODEL}/question_$(date +%c | tr ' ' '_').md"
+  echo "$RESPONSE" | glow
+  gum confirm "Copy to Clipboard?" && echo "$RESPONSE" | wl-copy
 }
 
 # --- depracted ---

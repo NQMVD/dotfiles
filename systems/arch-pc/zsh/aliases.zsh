@@ -74,6 +74,11 @@ alias con='wezterm ssh noah@mondkuchen.tech'
 alias note='dnote'
 
 alias fzfp="fzf --preview 'bat --color=always --style=plain {}'"
+alias justchoose='just --choose'
+alias justlist='just --list'
+alias justedit='just --edit'
+
+alias run='tempfile=$(mktemp); $EDITOR $tempfile; source $tempfile; rm $tempfile'
 
 # todos and jrnls
 alias tod='taskell ~/taskell.md'
