@@ -1,0 +1,23 @@
+layout {
+    tab name="Main" {
+        pane size=1 borderless=true {
+            plugin location="zellij:tab-bar"
+        }
+        pane split_direction="Vertical" {
+            // pane size="10%" {
+            //     plugin location="zellij:strider"
+            // }
+            pane command="nu" size="10%" {
+                args "-c" "watch . { |op, path| if not ($path | str contains 'target/') { clear; eza -T --level=2 --color=always --icons } }"
+            }
+            pane split_direction="vertical" {
+                pane edit="./src/main.rs" focus=true
+                children
+            }
+            pane command="bacon" size="25%"
+        }
+        pane size=2 borderless=true {
+            plugin location="zellij:status-bar"
+        }
+    }
+}
