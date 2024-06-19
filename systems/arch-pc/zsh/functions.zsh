@@ -206,11 +206,11 @@ function peach() {
 
 # ask ollama
 function ask() {
-  local MODEL='llama3'
-  local PROMPT="$@"
-  [[ "$#" -lt 1 ]] && PROMPT=$(chewwrite "Prompt:")  #{ gum log -l 'error' 'No prompt provided'; return 1 } 
-  local RESPONSE=$(gum spin --title="Generating..." -- ollama run "$MODEL" "$PROMPT")
-  echo "# DATE: $(date)
+    local MODEL='llama3'
+    local PROMPT="$@"
+    [[ "$#" -lt 1 ]] && PROMPT=$(chewwrite "Prompt:")  #{ gum log -l 'error' 'No prompt provided'; return 1 } 
+    local RESPONSE=$(gum spin --title="Generating..." -- ollama run "$MODEL" "$PROMPT")
+    echo "# DATE: $(date)
 ---
 # MODEL: ${MODEL}
 ---
@@ -220,8 +220,23 @@ ${PROMPT}
 # RESPONSE::
 ${RESPONSE}
 " > "${HOME}/ai/${MODEL}/question_$(date +%c | tr ' ' '_').md"
-  echo "$RESPONSE" | glow
-  gum confirm "Copy to Clipboard?" && echo "$RESPONSE" | wl-copy
+    
+    echo "$RESPONSE" | glow
+
+    COUNT=$(echo "$RESPONSE" | getcodeblocks count)
+
+    if [[ $COUNT -eq 0 ]]; then
+        gum confirm "No code blocks found! Copy to clipboard anyway?" && echo "$RESPONSE" | wl-copy
+
+    elif [[ $COUNT -eq 1 ]]; then
+        CODEBLOCK=$(echo "$RESPONSE" | getcodeblocks get 1)
+        gum confirm "Copy to Clipboard?" && echo "$CODEBLOCK" | wl-copy
+
+    else
+        CODEBLOCKNUM=$(echo "$RESPONSE" | getcodeblocks | gum choose --header='Choose a Codeblock:' | awk -F: '{print $1}')
+        CODEBLOCK=$(echo "$RESPONSE" | getcodeblocks get "$CODEBLOCKNUM")
+        gum confirm "Copy to Clipboard?" && echo "$CODEBLOCK" | wl-copy
+    fi
 }
 
 # --- depracted ---
