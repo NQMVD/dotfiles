@@ -55,9 +55,9 @@ alias ip='command ip -color=auto'
 alias userlist='cut -d: -f1 /etc/passwd'
 alias probe='sudo -E hw-probe -all -upload'
 
-# pacman (and yay)
-alias in='yay -S --noconfirm'
-alias up='yay -Syu' # dont add noconfirm here!
+# pacman (and yay), replaced by topgrade...
+# alias in='yay -S --noconfirm'
+# alias up='yay -Syu' # dont add noconfirm here!
 
 # program shorts
 alias wget='wget -c'
@@ -72,10 +72,14 @@ alias ai='aichat'
 alias uhas='HAS_ALLOW_UNSAFE=y has'
 alias con='wezterm ssh noah@mondkuchen.tech'
 alias note='dnote'
+alias hmm='h-m-m'
+alias u='ultralist'
+alias ula='ultralist list --status --notes'
+alias uls='ultralist list --notes group:status'
 
 alias fzfp="fzf --preview 'bat --color=always --style=plain {}'"
 alias justchoose='just --choose'
-alias justlist='just --list'
+alias justls='just --list'
 alias justedit='just --edit'
 
 alias run='tempfile=$(mktemp); $EDITOR $tempfile; source $tempfile; rm $tempfile'
@@ -106,7 +110,7 @@ alias download='cd ~/Downloads && gum spin --spinner=minidot --show-output --tit
 
 
 # logger
-function gol() {
+function pog() {
 	# level, msg
 	# check GUM_LOG_LEVEL
 	LEVELS=("debug" "info" "warn" "error" "fatal")
