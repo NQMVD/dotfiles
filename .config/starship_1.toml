@@ -1,0 +1,58 @@
+"$schema" = 'https://starship.rs/config-schema.json'
+
+# USERNAME in DIR GIT took SECS --- PACKAGE STATUS SHLVL
+# JOBS >
+
+format = """\
+$username in $directory\
+$fossil_branch$git_branch$git_commit$git_state$git_metrics$git_status$hg_branch\
+$cmd_duration\
+$fill\
+$package$c$cmake$golang$java$lua$nodejs$rust$container\
+$status$shlvl\
+$line_break\
+$jobs$shell$character"""
+
+[username]
+style_user = 'white bold'
+style_root = 'red bold'
+format = '[$user]($style)'
+disabled = false
+show_always = true
+
+[directory]
+truncate_to_repo = false
+
+[fill]
+symbol = ' '
+
+[package]
+format = '[$symbol$version]($style) '
+
+[status]
+disabled = true
+
+[shlvl]
+disabled = false
+threshold = 4
+
+[jobs]
+symbol = '[󰣏](bold purple)'
+# number_threshold = 1
+# symbol_threshold = 1
+
+[character]
+vimcmd_symbol = '[V](bold green) '
+
+# bold
+# italic
+# underline
+# dimmed
+# inverted
+# blink
+# hidden
+# strikethrough
+# bg:<color>
+# fg:<color>
+# <color>
+# none

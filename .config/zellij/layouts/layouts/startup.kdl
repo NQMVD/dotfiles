@@ -1,0 +1,34 @@
+
+layout {
+    default_tab_template {
+        pane size=1 borderless=true {
+            plugin location="zellij:tab-bar"
+        }
+        children
+        pane size=1 borderless=true {
+            plugin location="zellij:status-bar"
+        }
+    }
+
+    tab name="Welcome" focus=true {
+        pane split_direction="vertical" {
+            pane name="Zen" command="cbonsai" {
+                args "-p"
+            }
+            pane name="Info" command="inf"
+        }
+    }
+
+    tab name="TODO" cwd="~/SERVER/NVCC/TODO/" {
+        pane split_direction="vertical" {
+            pane name="ComputerCraft TODO" command="hx" {
+                args "./cc.md"
+            }
+            pane name="Modpack TODO" command="hx" {
+                args "./mods.md"
+            }
+        }
+
+    }
+}
+

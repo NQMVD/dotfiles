@@ -1,0 +1,12 @@
+layout {
+    pane size=1 borderless=true {
+        plugin location="zellij:/home/noah/zellij-plugins/zjstatus.wasm"
+    }
+}
+keybinds {
+    shared {
+        bind "Alt 1" { Run "eza" "--icons" "--color" "always" "--group-directories-first"; }
+        bind "Alt 2" { Run "fetchit"; }
+    }
+}
+

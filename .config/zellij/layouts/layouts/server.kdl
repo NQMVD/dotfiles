@@ -1,0 +1,30 @@
+
+layout {
+    default_tab_template {
+        pane size=1 borderless=true {
+            plugin location="zellij:tab-bar"
+        }
+        children
+        pane size=1 borderless=true {
+            plugin location="zellij:status-bar"
+        }
+    }
+
+    tab name="Server Log" cwd="~/SERVER/SkyRev/" focus=true {
+        pane split_direction="vertical" {
+            pane name="Log" command="./start.sh"
+            pane name="Resources" size=65 split_direction="horizontal" {
+                pane size=10 command="htop"
+                pane
+            }
+        }
+    }
+    tab name="Files" cwd="~/SERVER/SkyRev" {
+        pane split_direction="vertical" {
+            pane command="nnn"
+            pane command="taskell"
+        }
+    }
+    
+}
+

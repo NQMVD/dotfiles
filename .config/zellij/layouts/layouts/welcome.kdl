@@ -1,0 +1,45 @@
+layout {
+    default_tab_template {
+        pane size=1 borderless=true {
+            plugin location="zellij:compact-bar"
+        }
+        children
+    }
+    tab name="System Info" {
+        pane split_direction="vertical" {
+            pane split_direction="horizontal" {
+                pane command="topgrade" {
+                    args "-n"
+                }
+            }
+            pane split_direction="horizontal" {
+                pane {
+                    size 12
+                    command "tty-clock"
+                    args "-sct"
+                }
+                pane {
+                    size 10
+                    command "cal" 
+                    args "-n2"
+                }
+                pane {
+                    command "tb" 
+                }
+            }
+            pane size="35%" split_direction="horizontal" {
+                pane {
+                    size 10
+                    command "htop"
+                }
+                pane {
+                    size "50%"
+                    command "duf"
+                }
+                pane {
+                    command "fastfetch" 
+                }
+            }
+        }
+    }
+}

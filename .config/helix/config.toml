@@ -1,0 +1,112 @@
+theme = "rose_pine"
+
+[editor]
+true-color = true
+color-modes = true
+line-number = "relative"
+cursorline = true
+bufferline = "multiple"
+shell = ["zsh", "-c"]
+popup-border = "all"
+
+[editor.cursor-shape]
+normal = "block"
+insert = "bar"
+select = "underline"
+
+[editor.statusline]
+mode.normal = "NORMAL"
+mode.insert = "INSERT"
+mode.select = "SELECT"
+separator = "|"
+left = ["mode", "spinner", "diagnostics"]
+center = ["file-name"]
+right = ["selections", "position", "position-percentage"]
+
+[editor.file-picker]
+hidden = false
+
+[editor.lsp]
+display-inlay-hints = true
+display-messages = true
+
+[editor.indent-guides]
+render = true
+character = "│"
+skip-levels = 1
+
+[editor.whitespace.render] # none/all
+space = "none"
+tab = "all"
+nbsp = "none"
+nnbsp = "none"
+newline = "none"
+
+[editor.whitespace.characters]
+space = "·"
+nbsp = "⍽"
+nnbsp = "␣"
+tab = "→"
+newline = "⏎"
+tabpad = "·" # Tabs will look like "→···" (depending on tab width)
+
+[keys.normal]
+C-k = ["scroll_up"]
+C-j = ["scroll_down"]
+# C-p = ["move_line_up"]
+# C-n = ["move_line_down"]
+X = "select_line_above"
+x = "select_line_below"
+"ret" = ["open_below"] # Maps the enter key to open_below then re-enter normal mode
+"tab" = [":buffer-next"]
+"S-tab" = [":buffer-previous"]
+C-g = [":new", ":insert-output lazygit", ":buffer-close!", ":redraw"]
+C-e = [":new", ":insert-output yazi", ":buffer-close!", ":redraw"]
+# ~/.config/helix/config.toml
+C-y = ":sh zellij run -f -x 10% -y 10% --width 80% --height 80% -- bash ~/.config/helix/yazi-picker.sh"
+
+[keys.normal.g]
+b = [
+    "goto_next_paragraph",
+    "collapse_selection"
+]
+B = [
+    "goto_prev_paragraph",
+    "collapse_selection",
+    "move_visual_line_up"
+]
+
+[keys.normal.space]
+q = ":quit"
+w = ":update"
+x = ":wq"
+i = ":toggle lsp.display-inlay-hints"
+# "." = ":toggle-option file-picker.git-ignore" # toggle seeing files hidden with the .gitignore in file pickers
+# t = ":sh zellij run -c -f -n 'FILE PICKER' --height '80%' --width '80%' --x '10%' --y '10%' -- ~/.config/helix/scripts/yazi.sh" # open yazi file tree
+# Add comma to the end of the line
+"," = [
+    "save_selection",
+    "goto_line_end",
+    ":append-output echo ','",
+    "collapse_selection",
+    "delete_selection",
+    "jump_backward",
+]
+# Add semicolumn to the end of the line
+";" = [
+    "save_selection",
+    "goto_line_end",
+    ":append-output echo ';'",
+    "collapse_selection",
+    "delete_selection",
+    "jump_backward",
+]
+
+"H" = [
+    "save_selection",
+    "open_below",
+    ":insert-output bat ~/.zsh_history | tail -n 5",
+    "collapse_selection",
+    "delete_selection",
+    "jump_backward",
+]

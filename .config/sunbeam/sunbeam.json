@@ -1,0 +1,19 @@
+{
+  "oneliners": [
+    {
+      "title": "Open Sunbeam Docs",
+      "command": "sunbeam open https://sunbeam.sh/docs",
+      "exit": true
+    },
+    {
+      "title": "Open Sunbeam Repository",
+      "command": "sunbeam open https://github.com/pomdtr/sunbeam",
+      "exit": true
+    }
+  ],
+  "extensions": {
+    "devdocs": {
+      "origin": "https://raw.githubusercontent.com/pomdtr/sunbeam/main/extensions/devdocs.sh"
+    }
+  }
+}

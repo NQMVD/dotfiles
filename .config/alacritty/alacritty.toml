@@ -1,0 +1,19 @@
+import = ["~/.config/alacritty/catppuccin.toml"]
+working_directory = "~"
+
+[window]
+padding = { x = 10, y = 10 }
+decorations = "None"
+opacity = 0.7
+blur = true
+resize_increments = true
+
+[scrolling]
+history = 0
+
+[font]
+normal = { family = "JetBrains Mono", style = "Regular" }
+size = 13
+
+[mouse]
+hide_when_typing = true
