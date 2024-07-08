@@ -14,9 +14,9 @@ alias ...='z ../..'
 # lt = list tree (all)
 # lst = list short tree
 # lttt = list tree deeper
-EZAFLAGS='--icons --color=always --group-directories-first --git --git-ignore'
-alias  l="eza --all --oneline ${EZAFLAGS}"
-alias ls="eza --oneline ${EZAFLAGS}"
+EZAFLAGS='--icons --color=always --group-directories-first --git --sort=name'
+alias  l="eza --all ${EZAFLAGS}"
+alias ls="eza ${EZAFLAGS}"
 alias ll="eza -lah ${EZAFLAGS}"
 alias gl="eza --all --grid --width 50 ${EZAFLAGS}"
 

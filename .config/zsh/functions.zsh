@@ -51,15 +51,25 @@ function acp() {
 
 # open config of choice
 function conf() {
-  local choice=$(gum choose "zsh" "zellij" "starship" "jrnl" "hyprland")
+    LIST=$(eza -a '~/dotfiles/.config')
 
-  case "$choice" in
-    zsh) helix ~/.config/zsh; source ~/.zshrc && echo 'Reloaded!' || echo 'Failed to Reload...' ;;
-    zellij) helix ~/.config/zellij/config.kdl ;;
-    starship) helix ~/.config/starship.toml ;;
-    jrnl) helix ~/.config/jrnl/jrnl.yaml ;;
-    hyprland) helix ~/.config/hypr ;;
-  esac
+    CHOICE=$(echo $LIST | gum filter --header 'Config to open:')
+
+    if is file "~/dotfiles/.config/$CHOICE"; then
+      hx "$HOME/dotfiles/.config/$CHOICE"
+    elif is dir "~/dotfiles/.config/$CHOICE"; then
+      yazi "$HOME/dotfiles/.config/$CHOICE"
+    fi
+    
+  # local choice=$(gum choose "zsh" "zellij" "starship" "jrnl" "hyprland")
+
+  # case "$choice" in
+  #   zsh) helix ~/.config/zsh; source ~/.zshrc && echo 'Reloaded!' || echo 'Failed to Reload...' ;;
+  #   zellij) helix ~/.config/zellij/config.kdl ;;
+  #   starship) helix ~/.config/starship.toml ;;
+  #   jrnl) helix ~/.config/jrnl/jrnl.yaml ;;
+  #   hyprland) helix ~/.config/hypr ;;
+  # esac
 }
 
 # rust cargo install with pueue bg, sets PUEUE_CARGO_DONE

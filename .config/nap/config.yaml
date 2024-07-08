@@ -1,6 +1,6 @@
 # Configuration
-home: ~/repos/snippets
-default_language: rs
+home: ~/repos/myown/snippets
+default_language: sh
 theme: nord
 
 # Colors
