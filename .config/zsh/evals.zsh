@@ -7,9 +7,9 @@ eval "$(oh-my-posh init zsh --config $HOME/.config/zsh/ohmyposh/myown.toml)"
 # eval "$(starship init zsh)"
 
 
-eval "$(fzf --zsh)"
+# eval "$(fzf --zsh)"
 eval "$(zoxide init zsh)"
-source "$HOME/.config/broot/launcher/bash/br"
+# source "$HOME/.config/broot/launcher/bash/br"
 
 # FIX: warns with "can only be called from completion function"
 # eval "$(zellij setup --generate-completion zsh)"

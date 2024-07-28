@@ -14,6 +14,7 @@ export JRNL_ENTRY_COUNT=8
 export BAT_STYLE="changes,header,grid"
 export BAT_THEME="base16" # "ansi"
 export JUST_CHOOSER="gum choose --no-limit --header='Recipies:'"
+export OLLAMA_MODEL="llama3.1"
 
 # --- Gum styling ---
 # choose

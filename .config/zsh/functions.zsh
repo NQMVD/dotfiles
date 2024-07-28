@@ -21,9 +21,9 @@ function helf() {
 }
 
 # shows help from a command in a pager
-function helpp() {
+# function helpp() {
     
-}
+# }
 
 function yy() {
 	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")"
@@ -39,27 +39,35 @@ function mdc() {
   mkdir -p $1 && cd $1
 }
 
-function acp() {
-  # show small status
-  git status --porcelain
-  # add all files
-  git add .
-  # check if anything changed: A for added, M for modified (D for deleted, might include in the future)
-  git status --porcelain | grep -E "^\s?[AM]+\s" >/dev/null && git commit -m "$(gum input --header=\"Changes:\")" && gum confirm "Push?" && git push
+# function acp() {
+#   # show small status
+#   git status --porcelain
+#   # add all files
+#   git add .
+#   # check if anything changed: A for added, M for modified (D for deleted, might include in the future)
+#   git status --porcelain | grep -E "^\s?[AM]+\s" >/dev/null && git commit -m "$(gum input --header=\"Changes:\")" && gum confirm "Push?" && git push
+# }
+
+function moji() {
+    git status
+    git add .
+    hr
+    git status
+    git status --porcelain | grep -E "^\s?[AM]+\s" >/dev/null && goji && hr && git log -n 1 && hr && gum confirm "Push?" && git push
 }
 
 
 # open config of choice
 function conf() {
-    LIST=$(eza -a '~/dotfiles/.config')
+    LIST=$(eza -a "$HOME/dotfiles/.config")
 
     CHOICE=$(echo $LIST | gum filter --header 'Config to open:')
 
-    if is file "~/dotfiles/.config/$CHOICE"; then
+    # if is file "$HOME/dotfiles/.config/$CHOICE"; then
       hx "$HOME/dotfiles/.config/$CHOICE"
-    elif is dir "~/dotfiles/.config/$CHOICE"; then
-      yazi "$HOME/dotfiles/.config/$CHOICE"
-    fi
+    # elif is dir "$HOME/dotfiles/.config/$CHOICE"; then
+    #   yazi "$HOME/dotfiles/.config/$CHOICE"
+    # fi
     
   # local choice=$(gum choose "zsh" "zellij" "starship" "jrnl" "hyprland")
 
@@ -73,57 +81,57 @@ function conf() {
 }
 
 # rust cargo install with pueue bg, sets PUEUE_CARGO_DONE
-function rci() {
-  PKG=$1
-  export PUEUE_CARGO_DONE=-1
-  pueue add -g 'CARGO' "cargo install $PKG && export PUEUE_CARGO_DONE=0 || cargo install $PKG --locked && export PUEUE_CARGO_DONE=0 || export PUEUE_CARGO_DONE=1"
-}
+# function rci() {
+#   PKG=$1
+#   export PUEUE_CARGO_DONE=-1
+#   pueue add -g 'CARGO' "cargo install $PKG && export PUEUE_CARGO_DONE=0 || cargo install $PKG --locked && export PUEUE_CARGO_DONE=0 || export PUEUE_CARGO_DONE=1"
+# }
 
 
 # Function to create an executable copy of a *.zsh!* file in /usr/local/bin directory
-function cec() {
-    local source_file="$1"
-    local base_name="$(basename "$source_file")"
-    local dest_file="/usr/local/bin/$base_name"
+# function cec() {
+#     local source_file="$1"
+#     local base_name="$(basename "$source_file")"
+#     local dest_file="/usr/local/bin/$base_name"
 
-    # Check if the source file exists
-    if [[ ! -f "$source_file" ]]; then
-        echo "Error: Source file $source_file not found."
-        return 1
-    fi
+#     # Check if the source file exists
+#     if [[ ! -f "$source_file" ]]; then
+#         echo "Error: Source file $source_file not found."
+#         return 1
+#     fi
 
-    # Check if the destination file already exists
-    if [[ -e "$dest_file" ]]; then
-        # Prompt for confirmation to override the destination file
-        echo "Destination file '$dest_file' already exists."
-        if ! gum confirm 'What to do?' --affirmative="Override!" --negative="See diff..."
-        then
-            delta $source_file $dest_file || diff $source_file $dest_file
-            gum confirm "Override it?" || { echo "Aborted..." && return 1 }
-        fi
-    fi
+#     # Check if the destination file already exists
+#     if [[ -e "$dest_file" ]]; then
+#         # Prompt for confirmation to override the destination file
+#         echo "Destination file '$dest_file' already exists."
+#         if ! gum confirm 'What to do?' --affirmative="Override!" --negative="See diff..."
+#         then
+#             delta $source_file $dest_file || diff $source_file $dest_file
+#             gum confirm "Override it?" || { echo "Aborted..." && return 1 }
+#         fi
+#     fi
 
-    # Check if the file contains a shebang line and if its a .zsh file
-    # if ! head -n 1 "$source_file" | grep -q "^#!"; then
-    if [[ "$source_file" == *.zsh ]]; then
-        if ! head -n 1 "$source_file" | rg -q "^#!"; then
-            sudo echo "#!/usr/bin/env zsh" > "$dest_file"
-            sudo echo "# Source file: $source_file" >> "$dest_file"
-            sudo echo "# -------------------------" >> "$dest_file"
-            sudo cat "$source_file" >> "$dest_file"
-        else
-            # Copy the file to /bin directory with sudo
-            sudo cp -v "$source_file" "$dest_file"
-        fi
-    else
-        echo "NOT YET IMPLEMENTED FOR FILES LIKE: $source_file"
-    fi
+#     # Check if the file contains a shebang line and if its a .zsh file
+#     # if ! head -n 1 "$source_file" | grep -q "^#!"; then
+#     if [[ "$source_file" == *.zsh ]]; then
+#         if ! head -n 1 "$source_file" | rg -q "^#!"; then
+#             sudo echo "#!/usr/bin/env zsh" > "$dest_file"
+#             sudo echo "# Source file: $source_file" >> "$dest_file"
+#             sudo echo "# -------------------------" >> "$dest_file"
+#             sudo cat "$source_file" >> "$dest_file"
+#         else
+#             # Copy the file to /bin directory with sudo
+#             sudo cp -v "$source_file" "$dest_file"
+#         fi
+#     else
+#         echo "NOT YET IMPLEMENTED FOR FILES LIKE: $source_file"
+#     fi
     
-    # Make the file executable with sudo
-    sudo chmod +x "$dest_file"
+#     # Make the file executable with sudo
+#     sudo chmod +x "$dest_file"
 
-    echo "Executable copy created: $dest_file"
-}
+#     echo "Executable copy created: $dest_file"
+# }
 
 # exec-once for the shell with a cache file
 function onetime() {
@@ -236,9 +244,9 @@ function peach() {
 
 # ask ollama
 function ask() {
-    local MODEL='llama3'
+    local MODEL="$OLLAMA_MODEL"
     local PROMPT="$@"
-    [[ "$#" -lt 1 ]] && PROMPT=$(chewwrite "Prompt:")  #{ gum log -l 'error' 'No prompt provided'; return 1 } 
+    [[ "$#" -lt 1 ]] && PROMPT=$(chew "Prompt:" -w)  #{ gum log -l 'error' 'No prompt provided'; return 1 } 
     local RESPONSE=$(gum spin --title="Generating..." -- ollama run "$MODEL" "$PROMPT")
     echo "# DATE: $(date)
 ---
@@ -254,18 +262,19 @@ ${RESPONSE}
     echo "$RESPONSE" | glow
 
     COUNT=$(echo "$RESPONSE" | getcodeblocks count)
+    CLIP=$(whatclip)
 
     if [[ $COUNT -eq 0 ]]; then
-        gum confirm "No code blocks found! Copy to clipboard anyway?" && echo "$RESPONSE" | wl-copy
+        gum confirm "No code blocks found! Copy to clipboard anyway?" && echo "$RESPONSE" | $CLIP
 
     elif [[ $COUNT -eq 1 ]]; then
         CODEBLOCK=$(echo "$RESPONSE" | getcodeblocks get 1)
-        gum confirm "Copy to Clipboard?" && echo "$CODEBLOCK" | wl-copy
+        gum confirm "Copy to Clipboard?" && echo "$CODEBLOCK" | $CLIP
 
     else
         CODEBLOCKNUM=$(echo "$RESPONSE" | getcodeblocks | gum choose --header='Choose a Codeblock:' | awk -F: '{print $1}')
         CODEBLOCK=$(echo "$RESPONSE" | getcodeblocks get "$CODEBLOCKNUM")
-        gum confirm "Copy to Clipboard?" && echo "$CODEBLOCK" | wl-copy
+        gum confirm "Copy to Clipboard?" && echo "$CODEBLOCK" | $CLIP
     fi
 }
 
