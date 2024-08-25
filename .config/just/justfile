@@ -1,0 +1,49 @@
+# use bash for simple tasks
+# use lua for advanced stuff
+# UDPATE: use just functions and shell commands
+
+# use groups for categorizing
+# use aliases for shorts like c,l,x
+# use just confirms for specific stuff
+
+# use has to check for programs
+# use is for conditionals
+# use gnu parallel for multi-tasking
+
+# help:
+# Strings prefixed with x are shell expanded: foobar := x'~/$FOO/${BAR}'
+# run external commands with: shell(command, args...)
+# file := '/sys/class/power_supply/BAT0/status'
+# bat0stat := shell('cat $1', file)
+# add the /env bash shebang if necessary
+
+
+# -------------------------------------- #
+# settings
+set shell := ["bash", "-uc"]
+
+# variables
+jobs := shell('echo $(($(nproc) * 2 ))')
+EZAFLAGS := '--icons --color=always --group-directories-first --git --sort=name'
+
+# short aliases
+alias l := la
+
+# default flags
+
+# List
+_default:
+    @just --list
+    @echo {{ jobs }} jobs available
+    
+
+# other aliases
+
+ls:
+
+la:
+    
+ll:
+
+lt:
+

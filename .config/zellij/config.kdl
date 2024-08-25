@@ -240,7 +240,7 @@ ui {
 //   - true (default)
 //   - false
 //
-// session_serialization false
+session_serialization false
 
 // Whether pane viewports are serialized along with the session, default is false
 // Options:
@@ -287,12 +287,25 @@ themes {
 		black "#26233a"
 		white "#e0def4"
 	}
+	gruvbox {
+	    fg "#D5C4A1"
+ 		bg "#282828"
+ 		black "#3C3836"
+ 		red "#CC241D"
+ 		green "#98971A"
+ 		yellow "#D79921"
+ 		blue "#3C8588"
+ 		magenta "#B16286"
+ 		cyan "#689D6A"
+ 		white "#FBF1C7"
+ 		orange "#D65D0E"
+	}
 }
 
 // Choose the theme that is specified in the themes section.
 // Default: default
 //
-theme "rose-pine"
+theme "gruvbox"
 
 // The name of the default layout to load on startup
 // Default: "default"

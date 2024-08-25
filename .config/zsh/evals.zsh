@@ -8,7 +8,7 @@ eval "$(oh-my-posh init zsh --config $HOME/.config/zsh/ohmyposh/myown.toml)"
 
 
 # eval "$(fzf --zsh)"
-eval "$(zoxide init zsh)"
+eval "$(zoxide init zsh --no-cmd)"
 # source "$HOME/.config/broot/launcher/bash/br"
 
 # FIX: warns with "can only be called from completion function"

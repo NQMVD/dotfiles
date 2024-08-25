@@ -26,12 +26,12 @@ function helf() {
 # }
 
 function yy() {
-	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")"
-	yazi "$@" --cwd-file="$tmp"
-	if cwd="$(cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
-		cd -- "$cwd"
-	fi
-	rm -f -- "$tmp"
+    local tmp="$(mktemp -t "yazi-cwd.XXXXXX")"
+    yazi "$@" --cwd-file="$tmp"
+    if cwd="$(cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
+        cd -- "$cwd"
+    fi
+    command rm -f -- "$tmp"
 }
 
 # mkdir and cd
@@ -39,21 +39,53 @@ function mdc() {
   mkdir -p $1 && cd $1
 }
 
-# function acp() {
-#   # show small status
-#   git status --porcelain
-#   # add all files
-#   git add .
-#   # check if anything changed: A for added, M for modified (D for deleted, might include in the future)
-#   git status --porcelain | grep -E "^\s?[AM]+\s" >/dev/null && git commit -m "$(gum input --header=\"Changes:\")" && gum confirm "Push?" && git push
-# }
-
 function moji() {
-    git status
+    # set -e
+
+    # Check if the current directory is a git repository
+    if ! git rev-parse --is-inside-work-tree > /dev/null 2>&1; then
+        echo "Not a git repository."
+        return 1
+    fi
+
+    # Check for changes
+    if git diff-index --quiet HEAD --; then
+        echo "No changes to commit."
+        return 0
+    fi
+
+    # Add all changes
     git add .
+
+    # Check again for changes after adding
+    if git diff-index --quiet HEAD --; then
+        echo "No changes to commit even after adding."
+        return 0
+    fi
+
+    clear
+    git status -s
     hr
-    git status
-    git status --porcelain | grep -E "^\s?[AM]+\s" >/dev/null && goji && hr && git log -n 1 && hr && gum confirm "Push?" && git push
+
+    # use goji for pretty commit
+    if ! goji; then
+        echo 'User aborted...'
+        return 1
+    fi
+    hr
+
+    # Show the commit and what changed
+    git show --stat
+    hr
+
+    # Push to the current branch
+    if ! gum confirm "Push?"; then
+        echo 'Did not push...'
+        return 0
+    fi
+    gum spin --show-error --title="Pushing..." --spinner="minidot" -- git push origin HEAD
+    
+    echo "Done!"
 }
 
 
@@ -79,59 +111,6 @@ function conf() {
   #   hyprland) helix ~/.config/hypr ;;
   # esac
 }
-
-# rust cargo install with pueue bg, sets PUEUE_CARGO_DONE
-# function rci() {
-#   PKG=$1
-#   export PUEUE_CARGO_DONE=-1
-#   pueue add -g 'CARGO' "cargo install $PKG && export PUEUE_CARGO_DONE=0 || cargo install $PKG --locked && export PUEUE_CARGO_DONE=0 || export PUEUE_CARGO_DONE=1"
-# }
-
-
-# Function to create an executable copy of a *.zsh!* file in /usr/local/bin directory
-# function cec() {
-#     local source_file="$1"
-#     local base_name="$(basename "$source_file")"
-#     local dest_file="/usr/local/bin/$base_name"
-
-#     # Check if the source file exists
-#     if [[ ! -f "$source_file" ]]; then
-#         echo "Error: Source file $source_file not found."
-#         return 1
-#     fi
-
-#     # Check if the destination file already exists
-#     if [[ -e "$dest_file" ]]; then
-#         # Prompt for confirmation to override the destination file
-#         echo "Destination file '$dest_file' already exists."
-#         if ! gum confirm 'What to do?' --affirmative="Override!" --negative="See diff..."
-#         then
-#             delta $source_file $dest_file || diff $source_file $dest_file
-#             gum confirm "Override it?" || { echo "Aborted..." && return 1 }
-#         fi
-#     fi
-
-#     # Check if the file contains a shebang line and if its a .zsh file
-#     # if ! head -n 1 "$source_file" | grep -q "^#!"; then
-#     if [[ "$source_file" == *.zsh ]]; then
-#         if ! head -n 1 "$source_file" | rg -q "^#!"; then
-#             sudo echo "#!/usr/bin/env zsh" > "$dest_file"
-#             sudo echo "# Source file: $source_file" >> "$dest_file"
-#             sudo echo "# -------------------------" >> "$dest_file"
-#             sudo cat "$source_file" >> "$dest_file"
-#         else
-#             # Copy the file to /bin directory with sudo
-#             sudo cp -v "$source_file" "$dest_file"
-#         fi
-#     else
-#         echo "NOT YET IMPLEMENTED FOR FILES LIKE: $source_file"
-#     fi
-    
-#     # Make the file executable with sudo
-#     sudo chmod +x "$dest_file"
-
-#     echo "Executable copy created: $dest_file"
-# }
 
 # exec-once for the shell with a cache file
 function onetime() {
@@ -221,15 +200,6 @@ function list() {
     programs) gum join "$SCRIPTS" "$BINS";;
     all) extract_functions ~/.config/zsh/functions.zsh | glow && echo && gum join "$SCRIPTS" "$BINS";;
   esac
-}
-
-# fetch and bonsai as a welcome
-function zen() {
-  local files=$(gum style --padding '0 1' --border 'rounded' "$(l)")
-  # FIX: bonsai returning bulls***
-  local bonsai=$(gum style --padding '0 1' --border 'rounded' "$(cbonsai -p)")
-
-  echo "$(gum join --align 'center' "$files" "$bonsai")"
 }
 
 # a stupid xargs, runs a given command for each line from pipe input (nushell wins this one tho)

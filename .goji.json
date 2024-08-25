@@ -22,12 +22,6 @@
       "name": "refactor"
     },
     {
-      "emoji": "🐛",
-      "code": ":bug:",
-      "description": "Fix a bug.",
-      "name": "fix"
-    },
-    {
       "emoji": "📚",
       "code": ":books:",
       "description": "Documentation change.",
@@ -40,16 +34,22 @@
       "name": "wip"
     },
     {
+      "emoji": "🧹",
+      "code": ":broom:",
+      "description": "Clean up.",
+      "name": "tidy"
+    },
+    {
+      "emoji": "🐛",
+      "code": ":bug:",
+      "description": "Fix a bug.",
+      "name": "fix"
+    },
+    {
       "emoji": "📦",
       "code": ":package:",
       "description": "Add or update compiled files or packages.",
       "name": "package"
-    },
-    {
-      "emoji": "⚰️",
-      "code": ":coffin:",
-      "description": "Remove dead code.",
-      "name": "deprecate"
     },
     {
       "emoji": "⚡️",
@@ -62,12 +62,6 @@
       "code": ":ambulance:",
       "description": "Critical hotfix.",
       "name": "hotfix"
-    },
-    {
-      "emoji": "🧪",
-      "code": ":test_tube:",
-      "description": "Add a test.",
-      "name": "test"
     }
   ]
 }

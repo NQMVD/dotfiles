@@ -1,4 +1,4 @@
-theme = "rose_pine"
+theme = "gruvbox_dark_hard"
 
 [editor]
 true-color = true
@@ -61,8 +61,6 @@ x = "select_line_below"
 "tab" = [":buffer-next"]
 "S-tab" = [":buffer-previous"]
 C-g = [":new", ":insert-output lazygit", ":buffer-close!", ":redraw"]
-C-e = [":new", ":insert-output yazi", ":buffer-close!", ":redraw"]
-# ~/.config/helix/config.toml
 C-y = ":sh zellij run -f -x 10% -y 10% --width 80% --height 80% -- bash ~/.config/helix/yazi-picker.sh"
 
 [keys.normal.g]
@@ -81,8 +79,8 @@ q = ":quit"
 w = ":update"
 x = ":wq"
 i = ":toggle lsp.display-inlay-hints"
-# "." = ":toggle-option file-picker.git-ignore" # toggle seeing files hidden with the .gitignore in file pickers
-# t = ":sh zellij run -c -f -n 'FILE PICKER' --height '80%' --width '80%' --x '10%' --y '10%' -- ~/.config/helix/scripts/yazi.sh" # open yazi file tree
+z = ":toggle soft-wrap.enable"
+
 # Add comma to the end of the line
 "," = [
     "save_selection",
