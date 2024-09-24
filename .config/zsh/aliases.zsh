@@ -5,7 +5,7 @@ alias j='just'
 
 alias c=__zoxide_z
 alias zi=__zoxide_zi
-alias cc='c -'
+alias cb='c -'
 alias ..='c ..'
 
 # short renames

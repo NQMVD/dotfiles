@@ -11,21 +11,44 @@ source ~/.config/zsh/aliases.zsh
 #     fi
 # }
 
+
+
+# function ai() {
+#     MODELS=$(aichat --list-models)
+#     MODEL=$(echo $MODELS | gum filter --header 'Choose a Model:')
+
+#     gum confirm 'Create a new Session?'
+#     NEWSESSION=$?
+
+#     if is equal "$NEWSESSION" 0; then
+#         aichat --model "$MODEL"
+#     else
+#         SESSIONS=$(aichat --list-sessions)
+#         SESSION=$(echo $SESSIONS | gum filter --header 'Choose a Session')
+#         aichat --model "$MODEL" --session "$SESSION"
+#     fi
+# }
+
+function clone() {
+    local fullrepo="$1"
+    local repo="$(echo $fullrepo | sed 's/.*\///')"
+    cd ~/Repos
+    gh repo clone "$fullrepo"
+    cd "$repo"
+}
+
 # shows content of .helf file in cwd, used to describe what a dir is
 function helf() {
     if is existing './.helf'; then
         glow ./.helf
+    elif is existing './README.md'; then
+        glow ./README.md
     else
-        gum log -l error 'No .helf file in cwd...'
+        gum log -l error 'No .helf or README file in cwd...'
     fi
 }
 
-# shows help from a command in a pager
-# function helpp() {
-    
-# }
-
-function yy() {
+function y() {
     local tmp="$(mktemp -t "yazi-cwd.XXXXXX")"
     yazi "$@" --cwd-file="$tmp"
     if cwd="$(cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
@@ -55,7 +78,7 @@ function moji() {
     fi
 
     # Add all changes
-    git add .
+    git add --all
 
     # Check again for changes after adding
     if git diff-index --quiet HEAD --; then

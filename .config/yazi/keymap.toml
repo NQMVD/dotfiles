@@ -2,3 +2,17 @@
 on   = "T"
 run  = "plugin --sync max-preview"
 desc = "Maximize or restore preview"
+
+[[manager.prepend_keymap]]
+on   = "<C-d>"
+run  = "plugin diff"
+desc = "Diff the selected with the hovered file"
+
+[[manager.prepend_keymap]]
+on = [ "L" ]
+run = "plugin bypass"
+desc = "Recursively enter child directory, skipping children with only a single subdirectory"
+[[manager.prepend_keymap]]
+on = [ "H" ]
+run = "plugin bypass --args=reverse"
+desc = "Recursively enter parent directory, skipping parents with only a single subdirectory"

@@ -31,3 +31,28 @@ function bashly() {
             ;;
     esac
 }
+
+function pman() {
+
+    case "$1" in
+        colors)
+            echo Default, Indexed
+            echo Idea
+            echo Not Started
+            echo Started, Ongoing
+            echo Paused
+            echo Completed
+            echo Aborted
+            ;;
+        *)
+            command "$0" "$@"
+            exit_code=$?
+            
+            if [ $exit_code -ne 0 ]; then
+                echo "Error: subcommand not recognized or '$0 $@' command failed."
+            fi
+
+            return $exit_code
+            ;;
+    esac
+}
