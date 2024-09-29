@@ -7,6 +7,7 @@ export PATH="${PATH}:/home/noah/.cargo/bin"
 export PATH="${PATH}:/home/noah/.local/bin"
 export PATH="${PATH}:$(go env GOPATH)/bin"
 export PATH="${PATH}:$(gem env path | sed 's#[^:]\+#&/bin#g')"
+export PATH="${PATH}:.nvm/versions/node/v22.7.0/bin"
 export MANPATH="/home/noah/.local/share/man:${MANPATH}"
 
 # --- variables ---
@@ -17,6 +18,7 @@ export JUST_CHOOSER="gum choose --no-limit --header='Recipies:'"
 export OLLAMA_MODEL="llama3.1"
 export ZELLIJ_RUNNER_MAX_DIRS_DEPTH="2"
 export BINSTALL_NO_CONFIRM
+export ZEIT_DB="$HOME/zeit/database.db"
 
 # --- Gum styling ---
 # choose

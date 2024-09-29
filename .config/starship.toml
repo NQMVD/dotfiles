@@ -2,98 +2,103 @@ command_timeout = 1000
 
 format = """
 $username\
-$hostname\
+$hostname \
+${custom.zeit_tracking}\
 $localip\
 $shlvl\
-$singularity\
-$kubernetes\
-$directory\
+$directory \
 $vcsh\
 $fossil_branch\
 $fossil_metrics\
-${custom.git_info}\
+${custom.git_remote}\
+$git_branch\
 $git_commit\
 $git_state\
 $git_metrics\
 $git_status\
+${custom.end_of_git}\
+$cmd_duration\
 $hg_branch\
-$pijul_channel\
 $docker_context\
+$direnv\
+$env_var\
+$sudo\
+$memory_usage\
+$fill\
+
+${custom.right_begin}\
 $package\
 $c\
 $cmake\
-$cobol\
-$daml\
 $dart\
 $deno\
 $dotnet\
 $elixir\
-$elm\
-$erlang\
 $fennel\
 $gleam\
 $golang\
-$guix_shell\
 $haskell\
-$haxe\
-$helm\
 $java\
-$julia\
 $kotlin\
 $gradle\
 $lua\
-$nim\
 $nodejs\
-$ocaml\
-$opa\
 $perl\
 $php\
-$pulumi\
-$purescript\
 $python\
-$quarto\
-$raku\
-$rlang\
-$red\
 $ruby\
 $rust\
-$scala\
-$solidity\
-$swift\
-$terraform\
-$typst\
-$vlang\
-$vagrant\
 $zig\
-$buf\
 $nix_shell\
-$conda\
-$meson\
-$spack\
-$memory_usage\
-$aws\
-$gcloud\
-$openstack\
-$azure\
-$nats\
-$direnv\
-$env_var\
-$crystal\
-$sudo\
-$cmd_duration\
+${custom.right_end}\
+
 $line_break\
+
 $jobs\
-$battery\
-$time\
 $status\
 $os\
 $container\
 $shell\
 $character"""
 
-#   
+[fill]
+style = 'fg:#2D3031'
+symbol = '·'
+
+[username]
+disabled = false
+show_always = true
+style_user = 'fg:2 bg:#1D2021'
+style_root = 'fg:1 bg:#1D2021'
+format = '[](fg:#1D2021)[$user]($style)'
+
+[hostname]
+disabled = false
+ssh_only = false
+style = 'fg:2 bg:#1D2021'
+format = '[@$hostname]($style)[](fg:#1D2021)'
+
+[custom.zeit_tracking]
+when = "zeit tracking"
+command = '''
+  name=$(zeit tracking | grep -oP "(?<=task on ).*(?= for)" | sed 's/\x1B\[[0-9;]*[a-zA-Z]//g')
+  time=$(zeit tracking | grep -oP "(?<=for ).*h" | sed 's/\x1B\[[0-9;]*[a-zA-Z]//g')
+  # echo "$name $time"
+  echo "$name"
+'''
+style = "fg:12 bg:#1D2021"
+format = '[](fg:#1D2021)[▶ $output]($style)[](fg:#1D2021) '
+
+[directory]
+truncate_to_repo = false
+truncation_length = 4
+truncation_symbol = '.../'
+style = "fg:14 bg:#1D2021"
+read_only_style = "bg:#1D2021"
+format = '[](fg:#1D2021)[$path]($style)[$read_only]($read_only_style)[](fg:#1D2021)'
 
 [custom.git_remote]
+when = "git rev-parse --is-inside-work-tree 2>/dev/null"
 command = '''
   remote=$(git remote get-url origin 2>/dev/null)
   if [[ $remote == *"github"* ]]; then
@@ -106,29 +111,130 @@ command = '''
     echo " ?"
   fi
 '''
+style = "fg:5 bg:#1D2021"
+format = "[](fg:#1D2021)[$output ]($style)"
+
+[git_branch]
+symbol = '󰘬 '
+style = "fg:5 bg:#1D2021"
+format = '[$symbol$branch(:$remote_branch)]($style)'
+
+[git_status]
+ahead = ' ${count}'
+diverged = '⇕ ${ahead_count}  ${behind_count}'
+behind = ' ${count}'
+deleted = '✖'
+style = "fg:5 bg:#1D2021"
+format = '([ $all_status$ahead_behind]($style))'
+
+[custom.end_of_git]
 when = "git rev-parse --is-inside-work-tree 2>/dev/null"
-format = "[$symbol$output ]($style) "
-style = "bold blue"
+format = '[](fg:#1D2021) '
 
-[custom.git_info]
-command = '''
-  branch=$(git branch --show-current 2>/dev/null)
-  remote=$(git remote get-url origin 2>/dev/null)
-  if [[ $remote == *"github"* ]]; then
-    icon=" "
-  elif [[ $remote == *"gitlab"* ]]; then
-    icon=" "
-  elif [[ $remote == *"bitbucket"* ]]; then
-    icon=" "
-  else
-    icon=" "
-  fi
-  echo "$icon 󰘬 $branch"
-'''
-when = "git rev-parse --is-inside-work-tree 2>/dev/null"
-format = "on [$output]($style) "
-style = "bold purple"
+[cmd_duration]
+min_time = 3_000
+style = "fg:11 bg:#1D2021"
+format = '[](fg:#1D2021)[$duration]($style)[](fg:#1D2021) '
+
+[custom.right_begin]
+when = "true"
+format = ' [](fg:#1D2021)'
+
+[custom.right_end]
+when = "true"
+format = '[](fg:#1D2021)'
+
+[package]
+style = "fg:11 bg:#1D2021"
+format = '[$symbol$version]($style)'
+
+[c]
+format = '[$symbol($version) ]($style bg:#1D2021)'
+
+[cmake]
+format = '[$symbol($version) ]($style bg:#1D2021)'
+
+[dart]
+format = '[$symbol($version) ]($style bg:#1D2021)'
+
+[deno]
+format = '[$symbol($version) ]($style bg:#1D2021)'
+
+[dotnet]
+format = '[$symbol($version) ]($style bg:#1D2021)'
+
+[elixir]
+format = '[$symbol($version) ]($style bg:#1D2021)'
+
+[fennel]
+format = '[$symbol($version) ]($style bg:#1D2021)'
+
+[gleam]
+format = '[$symbol($version) ]($style bg:#1D2021)'
+
+[golang]
+format = '[$symbol($version) ]($style bg:#1D2021)'
+
+[haskell]
+format = '[$symbol($version) ]($style bg:#1D2021)'
+
+[java]
+format = '[$symbol($version) ]($style bg:#1D2021)'
+
+[kotlin]
+format = '[$symbol($version) ]($style bg:#1D2021)'
+
+[gradle]
+format = '[$symbol($version) ]($style bg:#1D2021)'
+
+[lua]
+format = '[$symbol($version) ]($style bg:#1D2021)'
+
+[nodejs]
+format = '[$symbol($version) ]($style bg:#1D2021)'
+
+[perl]
+format = '[$symbol($version) ]($style bg:#1D2021)'
+
+[php]
+format = '[$symbol($version) ]($style bg:#1D2021)'
+
+[python]
+format = '[$symbol($version) ]($style bg:#1D2021)'
+
+[ruby]
+format = '[$symbol($version) ]($style bg:#1D2021)'
+
+[rust]
+format = '[$symbol($version) ]($style bg:#1D2021)'
+
+[zig]
+format = '[$symbol($version) ]($style bg:#1D2021)'
+
+[nix_shell]
+format = '[$symbol($version) ]($style bg:#1D2021)'
 
 
-[directory]
-truncate_to_repo = false
+
+
+# 󰞷    
+#  󰅒
+#         󰺕 󰬸  󰄯 󰚕 󰻃 󰄰 󰘻 󰘼 󰪠 󰎍 
+#   󱓼      󱁐
+# 󰍆 󰌕 󰲉 󰫍 
+# 󰅛󰢩󰱓 (network)
+#   󰊹              
+#          󱆃
+# 󰥙 󰂓 󰘧 󰍛 󰀘 󰚺 󰿘
+# 󱥒 󰦙 󰭄 󱥘 󱊔 󰳗        
+#     󱙝 󱓇  󱢟 󰧲 󰫄 󰫆 󰫈 󱫀 󰛡 󱃲
+
+# 󱙝   󰘧 󰍛  
+
+[jobs]
+symbol = '󱙝'
+
+[character]
+success_symbol = '[](bold green)'
+error_symbol = '[](bold red)'
+
