@@ -1,11 +1,8 @@
 # --- evals ---
 
-# Prompt
-# TODO: add toggle switch for this
-
-# eval "$(oh-my-posh init zsh --config $HOME/.config/zsh/ohmyposh/bubblesextra.omp.toml)"
 eval "$(starship init zsh)"
 
+# eval "$(oh-my-posh init zsh --config $HOME/.config/zsh/ohmyposh/bubblesextra.omp.toml)"
 
 # eval "$(fzf --zsh)"
 eval "$(zoxide init zsh --no-cmd)"

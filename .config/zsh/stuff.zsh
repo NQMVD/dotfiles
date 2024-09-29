@@ -21,22 +21,3 @@ setopt hist_ignore_all_dups
 setopt hist_save_no_dups
 setopt hist_ignore_dups
 setopt hist_find_no_dups
-
-# Hooks
-function do-ls() {emulate -L zsh; ls;}
-function checkwd() {
-  emulate -L zsh
-}
-
-function checkjobs() {
-  emulate -L zsh
-  if is not empty $(jobs); then
-    export JOBS=''
-  else
-    export JOBS=''
-  fi
-}
-
-# add-zsh-hook chpwd do-ls
-add-zsh-hook preexec checkjobs
-add-zsh-hook precmd checkjobs

@@ -61,6 +61,7 @@ $container\
 $shell\
 $character"""
 
+
 [fill]
 style = 'fg:#2D3031'
 symbol = '·'
@@ -81,7 +82,7 @@ format = '[@$hostname]($style)[](fg:#1D2021)'
 [custom.zeit_tracking]
 when = "zeit tracking"
 command = '''
-  name=$(zeit tracking | grep -oP "(?<=task on ).*(?= for)" | sed 's/\x1B\[[0-9;]*[a-zA-Z]//g')
+  name=$(zeit tracking | grep -oP "(?<=on ).*(?= for)" | sed 's/\x1B\[[0-9;]*[a-zA-Z]//g')
   time=$(zeit tracking | grep -oP "(?<=for ).*h" | sed 's/\x1B\[[0-9;]*[a-zA-Z]//g')
   # echo "$name $time"
   echo "$name"
@@ -146,7 +147,7 @@ format = '[](fg:#1D2021)'
 
 [package]
 style = "fg:11 bg:#1D2021"
-format = '[$symbol$version]($style)'
+format = '[$symbol$version ]($style)'
 
 [c]
 format = '[$symbol($version) ]($style bg:#1D2021)'
@@ -238,3 +239,6 @@ symbol = '󱙝'
 success_symbol = '[](bold green)'
 error_symbol = '[](bold red)'
 
+
+[profiles]
+transient = """$directory $character $cmd_duration"""
