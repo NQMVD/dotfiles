@@ -2,7 +2,8 @@ command_timeout = 1000
 
 format = """
 $username\
-$hostname \
+$hostname\
+${custom.end_of_name} \
 ${custom.zeit_tracking}\
 $localip\
 $shlvl\
@@ -75,9 +76,13 @@ format = '[](fg:#1D2021)[$user]($style)'
 
 [hostname]
 disabled = false
-ssh_only = false
+ssh_only = true
 style = 'fg:2 bg:#1D2021'
-format = '[@$hostname]($style)[](fg:#1D2021)'
+format = '[@$hostname]($style)'
+
+[custom.end_of_name]
+when = true
+format = '[](fg:#1D2021)'
 
 [custom.zeit_tracking]
 when = "zeit tracking"
