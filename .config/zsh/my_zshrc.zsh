@@ -100,8 +100,6 @@ export GUM_SPIN_SPINNER="pulse"
 
 # --- direct aliases ---
 
-alias c=__zoxide_z
-alias zi=__zoxide_zi
 alias cb='c -'
 alias ..='c ..'
 
@@ -115,6 +113,7 @@ alias x='helix'
 alias hx='helix'
 alias g='git'
 alias lg='lazygit'
+alias p='pueue'
 
 # ls...
 EZAFLAGS='--icons --color=always --group-directories-first --git --sort=name'
@@ -237,6 +236,14 @@ function clone() {
     cd "$repo"
 }
 
+carque() {
+    pueued -d || true
+    pueue group add CARGO
+    for element in "$@"; do
+        pueue add -g CARGO "cargo binstall -y $element"
+    done
+}
+
 # shows content of .helf file in cwd, used to describe what a dir is
 function helf() {
     if is existing './.helf'; then
@@ -314,7 +321,7 @@ function moji() {
 
 # open config of choice
 function conf() {
-    LIST=$(eza -a "$HOME/dotfiles/.config")
+    LIST=$(eza -1 -a "$HOME/dotfiles/.config")
 
     CHOICE=$(echo $LIST | gum filter --header 'Config to open:')
 
@@ -367,12 +374,12 @@ function peach() {
 }
 
 # --- evals ---
-eval "$(zoxide init zsh --no-cmd)"
+eval "$(zoxide init zsh --cmd c)"
 
 # eval "$(oh-my-posh init zsh --config $HOME/.config/zsh/ohmyposh/bubblesextra.omp.toml)"
 # OR
 eval "$(starship init zsh)"
 
-source ~/.config/zsh/starship_transient_prompt.zsh
+# source ~/.config/zsh/starship_transient_prompt.zsh
 
 source ~/.secrets

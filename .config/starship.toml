@@ -27,6 +27,8 @@ $sudo\
 $memory_usage\
 $fill\
 
+${custom.pueue_cargo}\
+
 ${custom.right_begin}\
 $package\
 $c\
@@ -89,8 +91,8 @@ when = "zeit tracking"
 command = '''
   name=$(zeit tracking | grep -oP "(?<=on ).*(?= for)" | sed 's/\x1B\[[0-9;]*[a-zA-Z]//g')
   time=$(zeit tracking | grep -oP "(?<=for ).*h" | sed 's/\x1B\[[0-9;]*[a-zA-Z]//g')
-  # echo "$name $time"
-  echo "$name"
+  echo "$name $time"
+  # echo "$name"
 '''
 style = "fg:12 bg:#1D2021"
 format = '[](fg:#1D2021)[▶ $output]($style)[](fg:#1D2021) '
@@ -221,6 +223,20 @@ format = '[$symbol($version) ]($style bg:#1D2021)'
 format = '[$symbol($version) ]($style bg:#1D2021)'
 
 
+[custom.pueue_cargo]
+when = 'if pueue status -g CARGO | rg -q "Task list is empty" ; then false; else true; fi'
+command = """
+  output=$(pueue status -g CARGO)
+  running=$(echo "$output" | rg -c "Running")
+  success=$(echo "$output" | rg -c "Success")
+  failed=$(echo "$output" | rg -c "Failed")
+
+  echo "$output" | rg -q "Running" && echo -n "$running󰦖 " || true
+  echo "$output" | rg -q "Success" && echo -n "$success " || true
+  echo "$output" | rg -q "Failed"  && echo -n "$failed " || true
+"""
+style = "fg:3 bg:#1D2021"
+format = ' [](fg:#1D2021)[$output ]($style)[](fg:#1D2021)'
 
 
 # 󰞷    
