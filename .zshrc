@@ -229,6 +229,7 @@ ctrl-f:reload^$PUEUE_TASKS^\
 }
 
 function clone() {
+    is empty "$@" && echo "Needs a repo name!" && return 1
     local fullrepo="$1"
     local repo="$(echo $fullrepo | sed 's/.*\///')"
     cd ~/Repos
@@ -236,7 +237,8 @@ function clone() {
     cd "$repo"
 }
 
-carque() {
+function carque() {
+    is empty "$@" && echo "Needs at least one program name!" && return 1
     pueued -d || true
     pueue group add CARGO
     for element in "$@"; do
@@ -266,7 +268,8 @@ function y() {
 
 # mkdir and cd
 function mdc() {
-  mkdir -p "$1" && cd "$1" || exit
+    is empty "$1" && echo "Needs a dir name!" && return 1
+    mkdir -p "$1" && cd "$1" || exit
 }
 
 function moji() {
@@ -276,12 +279,6 @@ function moji() {
     if ! git rev-parse --is-inside-work-tree > /dev/null 2>&1; then
         echo "Not a git repository."
         return 1
-    fi
-
-    # Check for changes
-    if git diff-index --quiet HEAD --; then
-        echo "No changes to commit."
-        return 0
     fi
 
     # Add all changes
