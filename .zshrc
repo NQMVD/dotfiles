@@ -65,6 +65,7 @@ export PATH="${PATH}:$(go env GOPATH)/bin"
 export PATH="${PATH}:$(gem env path | sed 's#[^:]\+#&/bin#g')"
 export PATH="${PATH}:.nvm/versions/node/v22.7.0/bin"
 export MANPATH="/home/noah/.local/share/man:${MANPATH}"
+export OLLAMA_ORIGINS="*"
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
@@ -379,4 +380,8 @@ eval "$(starship init zsh)"
 
 # source ~/.config/zsh/starship_transient_prompt.zsh
 
-source ~/.secrets
+# source ~/.secrets
+
+#THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
+export SDKMAN_DIR="$HOME/.sdkman"
+[[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"

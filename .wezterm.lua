@@ -82,6 +82,6 @@ config.keys = {
 }
 
 -- please fix lol
-config.enable_wayland = true
+config.enable_wayland = false
 
 return config
